@@ -13,7 +13,7 @@
 Route::get('/user', 'UserController@show');
 Route::get('/', 'HomeController@index')->name("main");
 Route::get('/minor', 'HomeController@minor')->name("minor");
-
+Route::get('/logout', array('uses' => '\App\Http\Controllers\Auth\LogoutController@getSignOut'));
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
