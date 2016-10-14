@@ -1,4 +1,14 @@
-@extends('layouts.app')
+<?php 
+/**
+ * User Controller
+ *
+ * @copyright  2016 SparkSupport
+ * @author     Ajith
+ * @date 	   12-10-16
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+?>
+@extends('layouts.home')
 
 @section('title', 'Main page')
 

@@ -23,43 +23,12 @@
         ]); ?>
     </script>
 </head>
-@if (Auth::guest())
     <body class="gray-bg">
 
         @yield('content')
 
     </body>
-@else
-    <body>
-
-      <!-- Wrapper-->
-        <div id="wrapper">
-
-            <!-- Navigation -->
-            @include('layouts.navigation')
-
-            <!-- Page wraper -->
-            <div id="page-wrapper" class="gray-bg">
-
-                <!-- Page wrapper -->
-                @include('layouts.topnavbar')
-
-                <!-- Main view  -->
-                @yield('content')
-
-                <!-- Footer -->
-                @include('layouts.footer')
-
-            </div>
-            <!-- End page wrapper-->
-
-        </div>
-        <!-- End wrapper-->
-
-    </body>
-@endif
     <!-- Scripts -->
     <script src="js/jquery-2.1.1.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/app.js"></script>
 </html>

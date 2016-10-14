@@ -10,10 +10,12 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-Route::get('/user', 'UserController@show');
+Auth::routes();
 Route::get('/', 'HomeController@index')->name("main");
+Route::get('/home', 'HomeController@index');
 Route::get('/minor', 'HomeController@minor')->name("minor");
 Route::get('/logout', array('uses' => '\App\Http\Controllers\Auth\LogoutController@getSignOut'));
-Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/users', 'UserController@show');
+Route::any('/users/createAdmin', array('uses' => 'UserController@createAdmin'));
+Route::any('/users/createCustomer', 'UserController@createCustomer');

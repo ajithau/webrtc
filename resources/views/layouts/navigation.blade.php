@@ -1,3 +1,14 @@
+<?php 
+/**
+ * User Controller
+ *
+ * @copyright  2016 SparkSupport
+ * @author     Ajith
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+    // get Uri segment
+    $segment = Request::segment(1); 
+?>
 <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
@@ -7,19 +18,16 @@
                         <span class="clear">
                             <span class="block m-t-xs">
                                 <strong class="font-bold">{{ Auth::user()->name}}</strong>
-                            </span> <span class="text-muted text-xs block">Example menu <b class="caret"></b></span>
+                            </span> <span class="text-muted text-xs block">Example menu </span>
                         </span>
                     </a>
-<!--                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                        <li><a href="#">Logout</a></li>
-                    </ul> -->
                 </div>
                 <div class="logo-element">
                     IN+
                 </div>
             </li>
-            <li>
-                <a href="user-management.html"><i class="fa fa-male"></i> <span class="nav-label">User Management</span></a>
+            <li @if($segment == 'users') class='active' @endif >
+                <a href="users"><i class="fa fa-male"></i> <span class="nav-label">User Management</span></a>
             </li> 
             <li>
                 <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">Streaming Video</span><span class="fa arrow"></span></a>
