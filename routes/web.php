@@ -19,4 +19,6 @@ Route::get('/logout', array('uses' => '\App\Http\Controllers\Auth\LogoutControll
 Route::get('/users', 'UserController@show');
 Route::any('/users/createAdmin', array('uses' => 'UserController@createAdmin'));
 Route::any('/users/createCustomer', 'UserController@createCustomer');
-Route::get('/videos', 'VideoController@show');
+Route::any('/videos', 'VideoController@show');
+Route::any('/videos/upload', 'VideoController@uploadVideo');
+Route::post('/videos/create', 'VideoController@createVideo');
