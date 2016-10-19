@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
+use Auth;
+use App\Video;
+use App\Video_detail;
 
 ini_set("upload_max_filesize", -1);
 ini_set("post_max_size", -1);
@@ -166,9 +168,31 @@ class VideoController extends Controller
      * @param  int
      * @return Response
      */
-    public function createVideo()
+    public function createVideo(Request $request)
     {
-        print_r($_REQUEST);die();
+        // print_r($_REQUEST);die();
+        // Get Current user id
+        $user = Auth::User();     
+        $userid = $user->id;
+
+        $video = new Video;
+        $video->user_id = $userid;
+        // $video->video   = $request->video;
+        $video->video   = "Video url";
+        // Insert data;
+        $video->save();
+
+        // Specifying the role of new user.
+        $detail = new Video_detail;
+        $detail->author            = $request->author;
+        $detail->copy_right        = $request->copyright;
+        $detail->description       = $request->full_description;
+        $detail->meta_description  = $request->description;
+        $detail->meta_title        = $request->meta_title;
+        $detail->title             = $request->title;
+        // Insert data;
+        $video->detail()->save($detail);
+
         return view('video/index');
     }    
 }
