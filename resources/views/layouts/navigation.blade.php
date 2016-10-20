@@ -27,13 +27,13 @@
                 </div>
             </li>
             <li @if($segment == 'users') class='active' @endif >
-                <a href="users"><i class="fa fa-male"></i> <span class="nav-label">User Management</span></a>
+                <a href="{{ url('/') }}/users"><i class="fa fa-male"></i> <span class="nav-label">User Management</span></a>
             </li> 
             <li  @if($segment == 'videos') class='active' @endif >
                 <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">Streaming Video</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     <li><a href="live-stream-ingest-video.html">Live Stream Ingest</a></li>
-                    <li  @if($segment == 'videos') class='active' @endif ><a href="videos">Video Library</a></li>
+                    <li  @if($segment == 'videos') class='active' @endif ><a href="{{ url('/') }}/videos">Video Library</a></li>
                     <li><a href="advertising.html">Advertising</a></li>
                 </ul>
             </li> 
