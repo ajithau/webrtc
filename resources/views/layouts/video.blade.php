@@ -14,13 +14,7 @@
     <!-- Styles -->
     <link href="{{ URL::to('/') }}/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ URL::to('/') }}/public/font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link href="http://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-    <link href="{{ URL::to('/') }}/css/plugins/chosen/chosen.css" rel="stylesheet">
-    <link href="{{ URL::to('/') }}/css/plugins/footable/footable.core.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" />
-    <link href="{{ URL::to('/') }}/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" media="all" rel="stylesheet" type="text/css" />
     <link href="{{ URL::to('/') }}/css/plugins/fileinput/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.css" />
     <link href="{{ URL::to('/') }}/css/animate.css" rel="stylesheet">
     <link href="{{ URL::to('/') }}/css/style.css" rel="stylesheet">
     <!-- Scripts -->
@@ -67,33 +61,8 @@
     <script src="{{ URL::to('/') }}/js/inspinia.js"></script>
     <script src="{{ URL::to('/') }}/js/plugins/pace/pace.min.js"></script>
 
-    <!-- iCheck -->
-    <script src="{{ URL::to('/') }}/js/plugins/iCheck/icheck.min.js"></script>
-
-    <!-- Morris -->
-    <script src="{{ URL::to('/') }}/js/plugins/morris/raphael-2.1.0.min.js"></script>
-    <script src="{{ URL::to('/') }}/js/plugins/morris/morris.js"></script>
-   
-    <!-- FooTable -->
-    <script src="{{ URL::to('/') }}/js/plugins/footable/footable.all.min.js"></script>
-    
-    <!-- Leaflet Map -->
-    <script src="https://npmcdn.com/leaflet@0.7.7/dist/leaflet.js"></script>
-     
-    <!-- Date range use moment.js same as full calendar plugin -->
-    <script src="{{ URL::to('/') }}/js/plugins/fullcalendar/moment.min.js"></script>
-
-    <!-- X-editable -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-    
-    <!-- Chosen -->
-    <script src="{{ URL::to('/') }}/js/plugins/chosen/chosen.jquery.js"></script>
-    
     <!-- File Input -->
     <script src="{{ URL::to('/') }}/js/plugins/fileinput/fileinput.min.js"></script>
-
-    <!-- Select Picker -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
 
     <!-- Pluupload -->
     <script type="text/javascript" src="{{ URL::to('/') }}/js/plupload.min.js"></script>
