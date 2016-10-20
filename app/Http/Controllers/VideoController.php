@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
+use Auth;
+use App\Video;
+use App\Video_detail;
+use DB;
 
 ini_set("upload_max_filesize", -1);
 ini_set("post_max_size", -1);
@@ -21,7 +24,15 @@ class VideoController extends Controller
      */
     public function show()
     {
-        return view('video/index');
+        $video = new Video;
+        $details = $video->with('detail', 'user')->get();
+        
+        /* $details = DB::table('videos')->select('videos.video', 'videos.created_at', 'video_details.title', 'users.name')->join('video_details', 'videos.id', '=', 'video_details.video_id')
+        ->join('users', 'videos.user_id', '=', 'users.id')
+        ->get()
+        ->paginate(5); */
+
+        return view('video/index', array('video' => $details));
     }
     /**
      * Upload Video.
@@ -166,9 +177,49 @@ class VideoController extends Controller
      * @param  int
      * @return Response
      */
-    public function createVideo()
+    public function createVideo(Request $request)
     {
-        print_r($_REQUEST);die();
-        return view('video/index');
-    }    
+        // Get Current user id
+        $user = Auth::User();     
+        $userid = $user->id;
+
+        foreach ($request->file_name as $url) {
+            # code...
+            $video = new Video;
+            $video->user_id = $userid;
+            // $video->video   = $request->video;
+            $video->video   = $url;
+            // Insert data;
+            $video->save();
+
+            // Specifying the role of new user.
+            $detail = new Video_detail;
+            $detail->author            = $request->author;
+            $detail->copy_right        = $request->copyright;
+            $detail->description       = $request->full_description;
+            $detail->meta_description  = $request->description;
+            $detail->meta_title        = $request->meta_title;
+            $detail->title             = $request->title;
+            // Insert data;
+            $video->detail()->save($detail);
+        }
+
+        return redirect('videos');
+    }  
+    /**
+     * Get Video detail
+     *
+     * @param  int
+     * @return Response
+     */
+    public function detail($videoid)
+    {
+        $videoid = $videoid;
+        $video = new Video;
+        $details = $video->with('detail', 'user')
+                        ->where('videos.id', $videoid)
+                        ->get();
+
+        return view('video/detail', array('video' => $details));
+    }
 }
