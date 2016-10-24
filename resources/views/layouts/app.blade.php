@@ -16,19 +16,32 @@
 
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <!-- Scripts -->
     <script>
-        window.Laravel = <?php echo json_encode([
+      window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
         ]); ?>
     </script>
 </head>
-    <body class="gray-bg">
+<body class="gray-bg">
+    @yield('content')
+    <my-app>
+    </my-app>
 
-        @yield('content')
+</body>
 
-    </body>
-    <!-- Scripts -->
-    <script src="js/jquery-2.1.1.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+<!-- Scripts -->
+<!-- Load angular libraries -->
+<!-- Polyfill(s) for older browsers -->
+<script src="node_modules/core-js/client/shim.min.js"></script>
+<script src="node_modules/zone.js/dist/zone.js"></script>
+<script src="node_modules/reflect-metadata/Reflect.js"></script>
+<script src="node_modules/systemjs/dist/system.src.js"></script>
+<!-- 2. Configure SystemJS -->
+<script src="systemjs.config.js"></script>    
+<script src="js/jquery-2.1.1.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script> 
+      System.import('src').catch(function(err){ console.error(err); });
+</script>
+<!-- End of Scripts -->
 </html>
