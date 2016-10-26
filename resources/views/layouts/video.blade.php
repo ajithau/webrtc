@@ -82,6 +82,7 @@
 
 var uploader = new plupload.Uploader({
     runtimes : 'html5,flash,silverlight,html4',
+    multi_selection : false,
     browse_button : 'pickfiles', // you can pass an id...
     container: document.getElementById('container'), // ... or DOM Element itself
     url : 'upload',
@@ -110,7 +111,9 @@ var uploader = new plupload.Uploader({
 
         FilesAdded: function(up, files) {
             plupload.each(files, function(file) {
-                document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+                document.getElementById('filelist').innerHTML = '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+                // Use this for multi upload
+                // document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
             });
         },
 
@@ -127,7 +130,9 @@ var uploader = new plupload.Uploader({
 uploader.init();
 uploader.bind('FileUploaded', function(up, file, info) {
   var obj = JSON.parse(info.response);
-    $('#console').append('<input type="hidden" name="file_name[]" value="' + obj.result + '" />');
+    $('#console').html('<input type="hidden" name="file_name" value="' + obj.result + '" />');
+    // use this for mult upload
+    // $('#console').append('<input type="hidden" name="file_name[]" value="' + obj.result + '" />');
     //note obj.result.cleanFileName instead obj.cleanFileName
  });
 
@@ -196,6 +201,13 @@ $(document).ready(function (){
       // Prevent actual form submission
       e.preventDefault();
    });
+});
+$("#video-upload").click(function() {
+  var file = $("#uploaded").val();
+  if(file == "") {
+    alert("Please Upload Video");
+    return false;
+  }
 });
 </script>
 </html>

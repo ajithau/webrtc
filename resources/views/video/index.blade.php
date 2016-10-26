@@ -12,6 +12,7 @@
 @section('title', 'Main page')
 
 @section('content')
+
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-lg-12">
                 <h2>Video Library</h2>
@@ -36,7 +37,7 @@
             <div class="modal-content animated fadeIn">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <span class="pull-left"><strong>Add:</strong> <!-- [First Name] [Last Name] --></span>
+                    <span class="pull-left"><strong>Add: Video</strong> <!-- [First Name] [Last Name] --></span>
                 </div>
                 <div class="modal-body">
                 {!! Form::open(array('url' => 'videos/create','files'=>true,'method' => 'post')) !!}                    
@@ -52,7 +53,9 @@
                         </div>
 
                         <br />
-                        <pre style="background: none; border: none" id="console"></pre>
+                        <pre style="display: none;" id="console">
+                            <input id="uploaded" type="hidden" name="file_name" required>
+                        </pre>
                         <!-- <div class="col-sm-6">
                         {{ Form::label('Upload Video') }}
                         {{ Form::file('video', null, array('class' => 'form-control', 'placeholder' => 'Upload Your Video')) }} 
@@ -61,7 +64,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                         {{ Form::label('Title') }}
-                        {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => 'Enter Title')) }} 
+                        {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => 'Enter Title', 'required')) }} 
                         </div>
                         <div class="col-sm-6">
                         {{ Form::label('Meta Title') }}
@@ -91,7 +94,7 @@
             </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary" id="video-upload">Save</button>
                 </div>
                 {!! Form::close() !!}
             </div>
@@ -103,7 +106,6 @@
                               </div>  
                        <hr class="hr-line-dashed" />
                          <!-- START: Table -->
-                        
                    <table class="table table-striped table-bordered table-hover dataTables" >
                     <thead>
                     <tr>
@@ -119,8 +121,11 @@
                     <tr class="gradeX">
                       <td></td>
                         <td>
+                            <?php 
+                            $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $detail['video']);
+                            $img = explode('public', $withoutExt); ?>
                             <a href="{{ url('/') }}/video/detail/{{ $detail['id'] }}">
-                                <img src="http://lorempixel.com/130/80/" alt="$video_detail['video']">&nbsp;
+                                <img src="{{ url('/') }}/public{{$img[1]}}_130.jpg" alt="$video_detail['video']">&nbsp;
                             {{ $detail['detail']['title'] }}
                             </a>
                         </td>

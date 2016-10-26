@@ -21,5 +21,6 @@ Route::any('/users/createAdmin', array('uses' => 'UserController@createAdmin'));
 Route::any('/users/createCustomer', 'UserController@createCustomer');
 Route::any('/videos', 'VideoController@show');
 Route::any('/videos/upload', 'VideoController@uploadVideo');
+Route::any('/videos/user_submited', 'VideoController@VideoList');
 Route::post('/videos/create', 'VideoController@createVideo');
 Route::any('/video/detail/{videoid}', 'VideoController@detail');

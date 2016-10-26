@@ -29,7 +29,7 @@
                         <div class="ibox-content no-padding">
                             <div class="row">
                                 <div class="col-lg-12">
-                                <div id="player">Loading the player...</div>
+                                <div id="player"></div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
@@ -49,7 +49,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-lg-4">
                    <!-- START: Accordion -->
                    <div class="panel-body accordion-panel-colour no-padding">
@@ -65,26 +64,28 @@
                                                <form method="get" class="form-horizontal">
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                    <label class="control-label">Meta Title</label>
+                                    <label class="control-label">Title</label>
                                     <input type="text" class="form-control" value="{{ $video[0]['detail']['meta_title'] }}">
                                     </div>
                                 </div>
                                <div class="form-group">
                                     <div class="col-sm-12">
                                     <label class="control-label">Description</label>
-                                        <textarea rows="4" class="form-control">{{ $video[0]['detail']['meta_description'] }}</textarea>
+                                        <textarea rows="4" class="form-control">{{ $video[0]['detail']['meta_description']}}</textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                     <label class="control-label">Long Description</label>
-                                        <textarea rows="8" class="form-control">{{ $video[0]['detail']['description'] }}</textarea>
+                                        <textarea rows="8" class="form-control">{{ $video[0]['detail']['description']
+}}</textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                     <label class="control-label">Copyright</label>
-                                    <input type="text" class="form-control" value="{{ $video[0]['detail']['copy_right'] }}">
+                                    <input type="text" class="form-control" value="{{ $video[0]['detail']['copy_right']
+}}">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -129,10 +130,33 @@
                             </div>
                    <!-- END: Accordion -->                                
                             </div>
-                        </div>
-                    </div>
-
-
-                        </div>
-                    </div>
+                         </div>
+                     </div>
+                </div>
+            </div>
+    <?php 
+    $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $video[0]['video']);
+    $video_path = explode('public', $video[0]['video']); 
+    $img_path   = explode('public', $withoutExt);
+    ?>                
+    <!-- Video player plugins -->
+    <script src="https://content.jwplatform.com/libraries/vz0f8yKj.js"></script>
+    <script>jwplayer.key="ABCdeFG123456SeVenABCdeFG123456SeVen==";</script>
+    <script>
+        jwplayer("player").setup({
+            "file": '{{ url('/') }}/public{{$video_path[1]}}',
+            "image": '{{ url('/') }}/public{{$img_path[1]}}_600.jpg',
+            "height": 378,
+            "width": 663,
+            "advertising": {
+                "client": "vast",
+                "schedule": {
+                  "preroll":{
+                    "tag": "http://tester.advertserve.com/servlet/vast2/media?mid=234&pid=0&random=__random-number__",
+                    "offset": "pre"
+                  }
+                }
+            }
+        });
+    </script>                
 @endsection

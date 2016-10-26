@@ -25,7 +25,7 @@ class VideoController extends Controller
     public function show()
     {
         $video = new Video;
-        $details = $video->with('detail', 'user')->get();
+        $details = $video->with('detail', 'user')->orderBy('created_at', 'desc')->get();
         
         /* $details = DB::table('videos')->select('videos.video', 'videos.created_at', 'video_details.title', 'users.name')->join('video_details', 'videos.id', '=', 'video_details.video_id')
         ->join('users', 'videos.user_id', '=', 'users.id')
@@ -34,6 +34,22 @@ class VideoController extends Controller
 
         return view('video/index', array('video' => $details));
     }
+
+
+    /**
+     * Show the Videos list.
+     *
+     * @param  int
+     * @return Response
+     */
+    public function VideoList()
+    {
+        $video = new Video;
+        $details = $video->with('detail', 'user')->orderBy('created_at', 'desc')->get();
+        return view('video/user_uploaded', array('video' => $details));
+    }  
+
+
     /**
      * Upload Video.
      *
@@ -164,6 +180,16 @@ class VideoController extends Controller
             rename("{$filePath}.part", $newfilename);
         }
 
+        // CreateThumbnail
+        $filename = pathinfo($newfilename, PATHINFO_FILENAME);
+
+        $thumbnail = $targetDir.'/'.$filename.'_600.jpg';
+        shell_exec("ffmpeg -i ".$newfilename." -vf scale=663:378 -deinterlace -an -ss 1 -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg ".$thumbnail." 2>&1");
+        $thumbnail1 = $targetDir.'/'.$filename.'_130.jpg';
+        shell_exec("ffmpeg -i ".$newfilename." -vf scale=130:80 -deinterlace -an -ss 1 -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg ".$thumbnail1." 2>&1");
+         $thumbnail2 = $targetDir.'/'.$filename.'_290.jpg';
+        shell_exec("ffmpeg -i ".$newfilename." -vf scale=295:220 -deinterlace -an -ss 1 -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg ".$thumbnail2." 2>&1");
+
         /*if(isset($newfilename)) {
             return $newfilename;
         } else {*/
@@ -182,28 +208,27 @@ class VideoController extends Controller
         // Get Current user id
         $user = Auth::User();     
         $userid = $user->id;
+        $url = $request->file_name; 
+        # code...
+        if($url!=null) {
+        $video = new Video;
+        $video->user_id = $userid;
+        // $video->video   = $request->video;
+        $video->video   = $url;
+        // Insert data;
+        $video->save();
 
-        foreach ($request->file_name as $url) {
-            # code...
-            $video = new Video;
-            $video->user_id = $userid;
-            // $video->video   = $request->video;
-            $video->video   = $url;
-            // Insert data;
-            $video->save();
-
-            // Specifying the role of new user.
-            $detail = new Video_detail;
-            $detail->author            = $request->author;
-            $detail->copy_right        = $request->copyright;
-            $detail->description       = $request->full_description;
-            $detail->meta_description  = $request->description;
-            $detail->meta_title        = $request->meta_title;
-            $detail->title             = $request->title;
-            // Insert data;
-            $video->detail()->save($detail);
-        }
-
+        // Specifying the role of new user.
+        $detail = new Video_detail;
+        $detail->author            = $request->author;
+        $detail->copy_right        = $request->copyright;
+        $detail->description       = $request->full_description;
+        $detail->meta_description  = $request->description;
+        $detail->meta_title        = $request->meta_title;
+        $detail->title             = $request->title;
+        // Insert data;
+        $video->detail()->save($detail);
+    }
         return redirect('videos');
     }  
     /**
