@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package    Home Controller
+ *
+ * @copyright  2016 metamorphosis.tv
+ * @author     Ajith, sparksupport.com
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ */
 
 namespace App\Http\Controllers;
 
