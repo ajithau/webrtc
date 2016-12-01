@@ -30,7 +30,6 @@
     </script>
 </head>
     <body>
-
       <!-- Wrapper-->
         <div id="wrapper">
 
@@ -54,7 +53,8 @@
 
         </div>
         <!-- End wrapper-->
-
+    <my-app>
+    </my-app>
     </body>
     <!-- Mainly scripts -->
     <script src="{{ URL::to('/') }}/js/jquery-2.1.1.js"></script>
@@ -85,13 +85,27 @@
     <!-- X-editable -->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
     
-     <!-- Chosen -->
+    <!-- Chosen -->
     <script src="{{ URL::to('/') }}/js/plugins/chosen/chosen.jquery.js"></script>
     
-     <!-- File Input -->
+    <!-- File Input -->
     <script src="{{ URL::to('/') }}/js/plugins/fileinput/fileinput.min.js"></script>
-      <!-- Select Picker -->
+    
+    <!-- Select Picker -->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+
+    <!-- Load angular libraries
+    Polyfill(s) for older browsers
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    2. Configure SystemJS
+    <script src="systemjs.config.js"></script>    
+    <script> 
+          System.import('src').catch(function(err){ console.error(err); });
+    </script>
+    End of Scripts -->
 <script>
     $('#countries').selectpicker({
         style: 'btn-white',
@@ -130,6 +144,34 @@
     })
     $(document).on('ready', function() {
         $("#input-7").fileinput({showCaption: false});
+    });
+    //  Inline Edit admin user details
+    $.fn.editable.defaults.mode = 'inline';
+    $('.inline_edit').editable({
+        name: 'inline',
+        title: 'inline',
+        success: function(response, newValue) {
+            var userid = $(this).closest( "tr" ).find('#user').attr('value');
+            var field = this.id;
+            var formData = {
+                'userid'   : userid,
+                'field'    : field,
+                'value'    : newValue
+            };  
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            }); 
+            $.ajax({
+                type        : "POST", 
+                data        : formData,
+                url         : baseUrl+"/users/updateAdminInline",
+                success: function(data){
+                    //  retrun data.
+                }
+            });
+        }
     });
 </script>
 </html>

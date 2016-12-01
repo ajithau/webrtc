@@ -24,7 +24,6 @@
                 <div class="ibox-title">                                
                     <h5><i class="fa fa-list-alt"></i> User Details</h5>
 					<div class="pull-right">
-	                	<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#add-user">Add User</button>
                 		<!-- START: Modal -->
                         <div class="modal inmodal" id="add-user" tabindex="-1" role="dialog"  aria-hidden="true">
                             <div class="modal-dialog">
@@ -97,18 +96,29 @@
                     <tbody>
                     @foreach ($users as $user)
                     <tr>
-						<td>{{ $user->name }}</td>
-						<td>{{ $user->name }}</td>
-						<td>{{ $user->first_name }}</td>
-						<td>{{ $user->last_name }}</td>
-						<td>******</td>
-						<td>{{ $user->email }}</td>
-						<td>{{ $user->mobile }}</td>
+                        <input type="hidden" id="user" value="{{ $user->id }}"></input>
+						<td class="" id="">
+                            @if($user->role == 2) {{"Super Admin"}} 
+                            @elseif($user->role == 3) {{"Admin"}}
+                            @elseif($user->role == 4) {{"Content Editor"}}
+                            @endif
+                        </td>
+						<td class="inline_edit" id="first_name">{{ $user->first_name }}</td>
+						<td class="inline_edit" id="last_name">{{ $user->last_name }}</td>
+						<td class="inline_edit" id="name">{{ $user->name }}</td>
+						<td class="inline_edit" id="password">******</td>
+						<td class="inline_edit" id="email">{{ $user->email }}</td>
+						<td class="inline_edit" id="mobile">{{ $user->mobile }}</td>
 						<td> </td>
-						<td>{{ $user->notification }}</td>
-						<td>{{ $user->created_at }}</td>
-						<td>{{ $user->updated_at }}</td>
-					</tr>
+						<td><?php $notify = unserialize($user->notification);
+                        if(is_array($notify)) {
+                            foreach ($notify as $notification) {
+                                echo $notification.'</br>';
+                        } } ?>
+                        </td>
+						<td>{{ date( 'd/m/Y', strtotime( $user->created_at ) ) }}</td>
+						<td>{{ date( 'd/m/Y', strtotime( $user->updated_at ) ) }}</td>
+   					</tr>
 					@endforeach
                     </tbody>
                 </table>

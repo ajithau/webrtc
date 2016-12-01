@@ -333,8 +333,8 @@
 						<td>{{ $user->mobile }}</td>
 						<td> </td>
 						<td>{{ $user->notification }}</td>
-						<td>{{ $user->created_at }}</td>
-						<td>{{ $user->updated_at }}</td>
+						<td>{{ date( 'd/m/Y', strtotime( $user->created_at ) ) }}</td>
+						<td>{{ date( 'd/m/Y', strtotime( $user->updated_at ) ) }}</td>
 					</tr>
 					@endforeach
                     </tbody>

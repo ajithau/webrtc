@@ -12,13 +12,15 @@
 @section('title', 'Main page')
 
 @section('content')
-
+<?php $count = count($video);?>
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-lg-12">
                 <h2>Video Library</h2>
             </div>               
         </div>
+        <div id="delete-lib" class="filters" ><i class="fa fa-trash-o" aria-hidden="true"></i></div>
         <div class="wrapper wrapper-content animated fadeInRight">
+
             <div class="row">
                     <div class="col-lg-12">
                         <div class="ibox float-e-margins">
@@ -27,7 +29,7 @@
                             </div>
                             <div class="ibox-content">
                               <div class="row">
-                                <div class="col-lg-6"><strong>Total no# of videos:</strong> 6</div>                                 
+                                <div class="col-lg-6"><strong>Total no# of videos:</strong> {{$count}}</div>     
                                 <div class="col-lg-6">
                                     <div class="pull-right">
                                         <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add-video"><i class="fa fa-upload"></i> Upload Video(s)</button>
@@ -40,7 +42,7 @@
                     <span class="pull-left"><strong>Add: Video</strong> <!-- [First Name] [Last Name] --></span>
                 </div>
                 <div class="modal-body">
-                {!! Form::open(array('url' => 'videos/create','files'=>true,'method' => 'post')) !!}                    
+                {!! Form::open(array('url' => 'videos/create', 'id' => 'upload-form', 'files'=>true, 'method' => 'post')) !!}                    
                     <div class="row">
 
                         <div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
@@ -53,8 +55,8 @@
                         </div>
 
                         <br />
+                        <input id="file_name" type="hidden" name="file_name" required>
                         <pre style="display: none;" id="console">
-                            <input id="uploaded" type="hidden" name="file_name" required>
                         </pre>
                         <!-- <div class="col-sm-6">
                         {{ Form::label('Upload Video') }}
@@ -68,27 +70,27 @@
                         </div>
                         <div class="col-sm-6">
                         {{ Form::label('Meta Title') }}
-                        {{ Form::text('meta_title', null, array('class' => 'form-control', 'placeholder' => 'Enter Meta Title')) }}                                     
+                        {{ Form::text('meta_title', null, array('class' => 'form-control', 'placeholder' => 'Enter Meta Title', 'required')) }}                                     
                         </div>
                     </div> 
                     <div class="row">
                         <div class="col-sm-6">
                         {{ Form::label('Description') }}
-                        {{ Form::textarea('description', null, array('class' => 'form-control', 'placeholder' => 'Enter Description', 'size' => '30x5')) }}
+                        {{ Form::textarea('description', null, array('class' => 'form-control', 'placeholder' => 'Enter Description', 'size' => '30x5', 'required')) }}
                         </div>
                         <div class="col-sm-6">
                         {{ Form::label('Full Description') }}
-                        {{ Form::textarea('full_description', null, array('class' => 'form-control', 'placeholder' => 'Enter Full Description', 'size' => '30x5')) }}                                       
+                        {{ Form::textarea('full_description', null, array('class' => 'form-control', 'placeholder' => 'Enter Full Description', 'size' => '30x5', 'required')) }}                                       
                         </div>
                     </div> 
                     <div class="row">
                         <div class="col-sm-6">
                         {{ Form::label('CopyRight') }}
-                        {{ Form::text('copyright', null, array('class' => 'form-control', 'placeholder' => 'Enter Copy Right')) }}                                     
+                        {{ Form::text('copyright', null, array('class' => 'form-control', 'placeholder' => 'Enter Copy Right', 'required')) }}                                     
                         </div>
                         <div class="col-sm-6">
                         {{ Form::label('Author ') }}
-                        {{ Form::text('author', null, array('class' => 'form-control', 'placeholder' => 'Enter Author Name')) }}
+                        {{ Form::text('author', null, array('class' => 'form-control', 'placeholder' => 'Enter Author Name', 'required')) }}
                     </div>
                 </div> 
             </div>
@@ -106,10 +108,11 @@
                               </div>  
                        <hr class="hr-line-dashed" />
                          <!-- START: Table -->
-                   <table class="table table-striped table-bordered table-hover dataTables" >
+                    {!! Form::open(array('url' => 'videos/deleteLib', 'id' => 'videolib'))!!}                    
+                    <table class="table table-striped table-bordered table-hover dataTables" >
                     <thead>
                     <tr>
-                      <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
+                      <th><input id="example-select-all" type="checkbox" /></th>
                         <th>Title</th>
                         <th>Duration</th>
                         <th>Upload Date</th>
@@ -119,19 +122,19 @@
                     <tbody>
                     @foreach ($video as $key => $detail)
                     <tr class="gradeX">
-                      <td></td>
+                      <td>{{ $detail->id }}</td>
                         <td>
                             <?php 
-                            $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $detail['video']);
+                            $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $detail->video);
                             $img = explode('public', $withoutExt); ?>
-                            <a href="{{ url('/') }}/video/detail/{{ $detail['id'] }}">
-                                <img src="{{ url('/') }}/public{{$img[1]}}_130.jpg" alt="$video_detail['video']">&nbsp;
-                            {{ $detail['detail']['title'] }}
+                            <a href="{{ url('/') }}/video/detail/{{ $detail->id }}">
+                                <img src="{{ url('/') }}/public{{$img[1]}}_130.jpg" alt="$video_detail->video">&nbsp;
+                            {{ $detail->title }}
                             </a>
                         </td>
-                        <td>{{ $detail['detail']['duration'] }}</td>
-                        <td>{{ date('d.m.Y', strtotime($detail['updated_at'])) }}</td>
-                        <td>{{ $detail['user']['name'] }}</td>
+                        <td>{{ $detail->duration }}</td>
+                        <td>{{ date('d/m/Y', strtotime($detail->updated_at)) }}</td>
+                        <td>{{ $detail->name }}</td>
                     </tr>
                     @endforeach
                     </tbody>
@@ -145,10 +148,12 @@
                     </tr>
                     </tfoot>
                     </table>
+                    {!! Form::close() !!}
                         
                         <!-- END: Table -->
                             </div>
                         </div>
                     </div>            
             </div>
+        </div>
 @endsection
