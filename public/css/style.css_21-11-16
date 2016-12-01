@@ -321,9 +321,6 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
 .fixed-nav #wrapper {
   margin-top: 0;
 }
-body { 
-  padding-right: 0 !important;
-}
 body.fixed-nav #wrapper .navbar-static-side,
 body.fixed-nav #wrapper #page-wrapper {
   margin-top: 60px;
@@ -7679,7 +7676,7 @@ margin-bottom: 5px;
 }
 .ad-providers, .ad-video, .video-play, .scheduled-ad,
 .companion-ad, .companion-details, .noui, .ad-message, 
-.skip-ad, .ad-video-lib, .ad-provier-type, .ad-video-type {
+.skip-ad {
     display: none;
 }
 .last-cl {
@@ -7698,12 +7695,12 @@ margin-bottom: 5px;
     overflow-y:scroll;
 }
 .selectator_element.single {
-    width: 100% !important;
+    width: 370px !important;
 }
 .editableform {
     margin-left: 15px;
 }
-.filters {
+.filter {
     background-color: #CF000F;
     width: 48px;
     height: 48px;
@@ -7722,7 +7719,4 @@ margin-bottom: 5px;
     color: #fff;
     font-size: 24px;
     cursor: pointer;
-}
-.select2-container--bootstrap .select2-dropdown {
-    z-index: 9999;
 }

@@ -1,0 +1,218 @@
+    $(document).ready(function() {
+      // $('.ad-provider').DataTable();
+      $('.videos-with-advertising').DataTable();
+
+      $(".select-ad-provider").select2({
+      placeholder: "Select an Ad Provider",
+          width: "100%",
+          theme: "bootstrap",
+      allowClear: true
+      });
+
+      $(".select-fallback-ad-provider").select2({
+      placeholder: "Select a Fallback Ad Provider",
+          width: "100%",
+          theme: "bootstrap",
+      allowClear: true
+      });
+      $(".select-videos").select2({
+      placeholder: "Select a Video",
+          width: "100%",
+          theme: "bootstrap",
+      allowClear: true
+      });
+      $(".select-video").select2({
+      placeholder: "Select a Video",
+          width: "100%",
+          theme: "bootstrap",
+      allowClear: true
+      });
+      $(".form-horizontal").validate({
+         rules: {  
+             height: "required",                     
+         }
+      });
+
+        $("input[name='ad-source']").change(function(){
+            $value = $(this).val();
+            $('.companion-ad').css("display", "block");
+            if($value == 'option1') {
+                $('.ad-providers').css("display", "block");
+                $('.ad-video').css("display", "none");
+            } else {
+                $('.ad-video').css("display", "block");
+                $('.ad-providers').css("display", "none");
+            }
+        });
+        $("input[name='companion-ad']").change(function(){
+            $value = $(this).val();
+            if($value == 'option1') {
+                $('.companion-details').css("display", "none");
+            } else {
+                $('.companion-details').css("display", "block");
+            }
+        });
+    });
+  $(document).ready(function() {
+
+    /* Add new user to datatable*/ 
+    var t = $('#example').DataTable();
+    var counter = 1;
+ 
+    $('#addRow').on( 'click', function () {
+        t.row.add( [
+            '<a class="ad" >Ad Provider</a>' ,
+            '<a class="vast" >VAST Tag</a>' ,
+            '<div class="text-center"><button class="btn btn-xs btn-primary" type="button"><i class="fa fa-times" value="new" id="new'+counter+'"></i></button></div>' 
+        ] ).draw(false);
+ 
+        counter++;
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        /* Edit detail onclick */
+        $.fn.editable.defaults.mode = 'inline';
+        $('#example .vast').editable({
+            name: 'vast',
+            title: 'vast',
+            source: [
+              {value: 0, text: 'Nothing'}
+            ],
+            success: function(response, newValue) {
+                var id = $(this).closest( "tr" ).find('.fa-times').attr('id');
+                var val = $(this).closest( "tr" ).find('.fa-times').attr('value');
+                if(val == "new") {
+                    var url = "adprovider";
+                    var formData = {
+                        'vast'    : newValue
+                    };                    
+                } else {
+                    var url = "updateprovider";
+                    var formData = {
+                        'vast'    : newValue,
+                        'id'    : id
+                    };                    
+                }
+                $.ajax({
+                    type        : "POST", 
+                    data        : formData,
+                    url         : url,
+                    success: function(data){
+                        $('#'+id).attr('value', data);
+                        $('#'+id).attr('id', data);
+                    }
+                });
+            }
+        });
+        $('#example .ad').editable({
+            name: 'ad_provider',
+            title: 'ad_provider',
+            source: [
+              {value: 0, text: 'Nothing'}
+            ],
+            success: function(response, newValue) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                var id = $(this).closest( "tr" ).find('.fa-times').attr('id');
+                var val = $(this).closest( "tr" ).find('.fa-times').attr('value');
+                if(val == "new") {
+                    var url = "adprovider";
+                    var formData = {
+                        'ad'    : newValue
+                    };                    
+                } else {
+                    var url = "updateprovider";
+                    var formData = {
+                        'ad'    : newValue,
+                        'id'    : id
+                    };                    
+                }
+                $.ajax({
+                    type        : "POST", 
+                    data        : formData,
+                    url         : url,
+                    success: function(data){
+                        $('#'+id).attr('value', data)
+                        $('#'+id).attr('id', data);
+                    }
+                });
+            }
+        });
+    } );
+
+    /* Edit detail onclick */
+    $.fn.editable.defaults.mode = 'inline';
+    $('#example .vast').editable({
+        name: 'vast',
+        title: 'vast',
+        source: [
+          {value: 0, text: 'Nothing'}
+        ],
+        success: function(response, newValue) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var id = $(this).closest( "tr" ).find('.fa-times').attr('id');
+            var url = "updateprovider";
+            var formData = {
+                'vast'    : newValue,
+                'id'    : id
+            };                    
+
+            $.ajax({
+                type        : "POST", 
+                data        : formData,
+                url         : url,
+                success: function(data){
+                    $('#'+id).attr('value', data);
+                    $('#'+id).attr('id', data);
+                }
+            });
+        }
+    });
+    $('#example .ad').editable({
+        name: 'ad_provider',
+        title: 'ad_provider',
+        source: [
+          {value: 0, text: 'Nothing'}
+        ],
+        success: function(response, newValue) {
+            var id = $(this).closest( "tr" ).find('.fa-times').attr('id');
+            var url = "updateprovider";
+            var formData = {
+                'ad'    : newValue,
+                'id'    : id
+            };                    
+            $.ajax({
+                type        : "POST", 
+                data        : formData,
+                url         : url,
+                success: function(data){
+                    $('#'+id).attr('value', data)
+                    $('#'+id).attr('id', data);
+                }
+            });
+        }
+    });
+    /* Delete Row from datatable*/ 
+    $('#example tbody').on( 'click', '.fa-times', function () {
+    t
+        .row( $(this).parents('tr') )
+        .remove()
+        .draw();
+    } );
+
+    /* Replicate ad provider */
+    $(".ad-provider").click(function () {
+        $( "#ad_provider" ).clone().appendTo( "#ad_providers" );
+    });
+
+  } );

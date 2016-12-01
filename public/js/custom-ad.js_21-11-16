@@ -1,0 +1,356 @@
+    $(document).ready(function() {
+      // $('.ad-provider').DataTable();
+      $('.videos-with-advertising').DataTable();
+
+      $(".select-ad-provider").select2({
+      placeholder: "Select an Ad Provider",
+          width: "100%",
+          theme: "bootstrap",
+      allowClear: true
+      });
+
+      $(".select-fallback-ad-provider").select2({
+      placeholder: "Select a Fallback Ad Provider",
+          width: "100%",
+          theme: "bootstrap",
+      allowClear: true
+      });
+      $(".select-videos").select2({
+      placeholder: "Select a Video",
+          width: "100%",
+          theme: "bootstrap",
+      allowClear: true
+      });
+      $(".select-video").selectator();
+
+      /*$(".select-video").select2({
+      placeholder: "Select a Video",
+          width: "100%",
+          theme: "bootstrap",
+      allowClear: true
+      });*/
+      $(".form-horizontal").validate({
+         rules: {  
+             height: "required",                     
+         }
+      });
+
+    $("input[name='ad_source']").change(function(){
+        $value = $(this).val();
+        $('.companion-ad').css("display", "block");
+        if($value == 0) {
+            $('.ad-providers').css("display", "block");
+            $('.ad-video').css("display", "none");
+            $('.noui').css("display", "none");
+            $('.scheduled-ad').css('display', 'none');
+        } else {
+            $('.ad-video').css("display", "block");
+            $('.ad-providers').css("display", "none");
+        }
+    });
+    $("input[name='companion_ad']").change(function(){
+        $value = $(this).val();
+        if($value == 0) {
+            $('.companion-details').css("display", "none");
+        } else {
+            $('.companion-details').css("display", "block");
+        }
+    });
+    $("input[name='scheduled-ad-breaks']").change(function(){
+        $value = $(this).val();
+        if($value == 0) {
+            $('.noui').css("display", "none");
+        } else {
+            $('.noui').css("display", "block");
+        }
+    });
+    $(".select-video").change(function(){
+        $('.scheduled-ad').css('display', 'block');
+        $('.video-play').css('display', 'block');
+    });
+  });
+  $(document).ready(function() {
+
+    var baseUrl = document.location.origin+'/angul';
+    /* Add new user to datatable*/ 
+    var t = $('#example').DataTable({
+        "order": [[ 2, "desc" ]]
+    });
+    var counter = 1;
+ 
+    $('#addRow').on( 'click', function () {
+        t.row.add( [
+            '<a class="ad" >Ad Provider</a>' ,
+            '<a class="vast" >VAST Tag</a>' ,
+            '<div class="text-center"><button class="btn btn-xs btn-primary deleteProvider" type="button"><i class="fa fa-times" value="new" id="new'+counter+'"></i></button></div>' 
+        ] ).draw(false);
+ 
+        $(".deleteProvider").on("click", function(){
+            var tr = $(this).parents('tr');
+            t.row( tr ).remove().draw();
+        });
+        counter++;
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        /* Edit detail onclick */
+        $.fn.editable.defaults.mode = 'inline';
+        $('#example .vast').editable({
+            name: 'vast',
+            title: 'vast',
+            source: [
+              {value: 0, text: 'Nothing'}
+            ],
+            success: function(response, newValue) {
+                var id = $(this).closest( "tr" ).find('.fa-times').attr('id');
+                var val = $(this).closest( "tr" ).find('.fa-times').attr('value');
+                if(val == "new") {
+                    var url = "adprovider";
+                    var formData = {
+                        'vast'    : newValue
+                    };                    
+                } else {
+                    var url = "updateprovider";
+                    var formData = {
+                        'vast'    : newValue,
+                        'id'    : id
+                    };                    
+                }
+                $.ajax({
+                    type        : "POST", 
+                    data        : formData,
+                    url         : url,
+                    success: function(data){
+                        $('#'+id).attr('value', data);
+                        $('#'+id).attr('id', data);
+                    }
+                });
+            }
+        });
+        $('#example .ad').editable({
+            name: 'ad_provider',
+            title: 'ad_provider',
+            source: [
+              {value: 0, text: 'Nothing'}
+            ],
+            success: function(response, newValue) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                var id = $(this).closest( "tr" ).find('.fa-times').attr('id');
+                var val = $(this).closest( "tr" ).find('.fa-times').attr('value');
+                if(val == "new") {
+                    var url = "adprovider";
+                    var formData = {
+                        'ad'    : newValue
+                    };                    
+                } else {
+                    var url = "updateprovider";
+                    var formData = {
+                        'ad'    : newValue,
+                        'id'    : id
+                    };                    
+                }
+                $.ajax({
+                    type        : "POST", 
+                    data        : formData,
+                    url         : url,
+                    success: function(data){
+                        $('#'+id).attr('value', data)
+                        $('#'+id).attr('id', data);
+                    }
+                });
+            }
+        });
+    } );
+
+    /* Edit detail onclick */
+    $.fn.editable.defaults.mode = 'inline';
+    $('#example .vast').editable({
+        name: 'vast',
+        title: 'vast',
+        source: [
+          {value: 0, text: 'Nothing'}
+        ],
+        success: function(response, newValue) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var id = $(this).closest( "tr" ).find('.fa-times').attr('id');
+            var url = "updateprovider";
+            var formData = {
+                'vast'    : newValue,
+                'id'    : id
+            };                    
+
+            $.ajax({
+                type        : "POST", 
+                data        : formData,
+                url         : url,
+                success: function(data){
+                    $('#'+id).attr('value', data);
+                    $('#'+id).attr('id', data);
+                }
+            });
+        }
+    });
+    $('#example .ad').editable({
+        name: 'ad_provider',
+        title: 'ad_provider',
+        source: [
+          {value: 0, text: 'Nothing'}
+        ],
+        success: function(response, newValue) {
+            var id = $(this).closest( "tr" ).find('.fa-times').attr('id');
+            var url = "updateprovider";
+            var formData = {
+                'ad'    : newValue,
+                'id'    : id
+            };                    
+            $.ajax({
+                type        : "POST", 
+                data        : formData,
+                url         : url,
+                success: function(data){
+                    $('#'+id).attr('value', data)
+                    $('#'+id).attr('id', data);
+                }
+            });
+        }
+    });
+
+    /* Replicate ad provider */
+    $(".ad-provider-select").click(function () {
+        $(".select-ad-provider").select2("destroy");
+        $( "#ad_provider" ).clone(true).appendTo( "#ad_providers" );
+        $(".select-ad-provider").select2({
+          placeholder: "Select an Ad Provider",
+              width: "100%",
+              theme: "bootstrap",
+          allowClear: true
+          });
+    });
+    /* Replicate fall back ad provider */
+    $(".ad-fallback").click(function () {
+        $(".select-fallback-ad-provider").select2("destroy");
+        $( "#fall_ad_provider" ).clone(true).appendTo( "#fall_ad_providers" );
+        $(".select-fallback-ad-provider").select2({
+          placeholder: "Select a Fallback Ad Provider",
+              width: "100%",
+              theme: "bootstrap",
+          allowClear: true
+          });
+    });
+    /* Removes fall back ad provider */
+    $(".ad-fallback-remove").click(function () {
+        $(this).closest("#fall_ad_provider").remove();
+    });
+    var count = 1;
+    var playerInstance = jwplayer("player");
+    $("#break").click(function () {
+        $(".ad_break").append('<div class="col-sm-3"><label for="" class="control-label">Break '+count+'</label><div class="input-group"><input type="number" class="form-control" min="0" name="ad_time[]" value="'+Math.round(playerInstance.getPosition())+'"><span class="input-group-btn"><button class="btn btn-primary ad_remove" type="button"><i class="fa fa-minus"></i></button></span></div></div>');
+        count++;
+        /* Removes fall break ads */
+        $(".ad_remove").click(function () {
+            $(this).closest(".col-sm-3").remove();
+        });
+    });
+
+    // Delete Provider   
+    $(".deleteProvider").on("click", function(){
+        var providerid = $(this).attr('value');
+        var tr = $(this).parents('tr');
+        bootbox.confirm({
+                message: "Are you sure you want to delete this ad provider?",
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+            },
+            callback: function (result) {
+                console.log('This was logged in the callback: ' + result);
+                if(result){
+                     $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    url = "ads/delete/"+providerid;
+                    $.ajax({
+                        type : "GET", 
+                        url  : url,
+                        success: function(data){
+                        }
+                    });
+                    t.row( tr ).remove().draw();
+                    bootbox.alert('Provider Deleted'); 
+                }
+            }
+        });
+    });
+    // Delete advertisement videos   
+    $(".delete-ad").on("click", function(){
+        var providerid = $(this).attr('value');
+        var tr = $(this).closest('tr');
+        bootbox.confirm({
+                message: "Are you sure you want to delete this Advertisement?",
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+            },
+            callback: function (result) {
+                console.log('This was logged in the callback: ' + result);
+                if(result){
+                     $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    url = "ads/deleteAd/"+providerid;
+                    $.ajax({
+                        type : "GET", 
+                        url  : url,
+                        success: function(data){
+                        }
+                    });
+                    t.row( tr ).remove().draw();
+                    bootbox.alert('Advertisement Deleted'); 
+                }
+            }
+        });
+    });
+    /* Selecy videos as per library */
+    $(".select-videos").change(function(){
+        var videoLib = $(this).find("option:selected").text();
+        url = baseUrl+'/ads/getVideo/'+videoLib;
+        var select = $(this).closest('.ad-video').find('.select-video');
+        select.selectator('destroy');
+        $.ajax({
+            type : "GET", 
+            url  : url,
+            success: function(data){
+                select.html(data);
+                select.selectator();
+            }
+        });
+    });
+
+  } );
