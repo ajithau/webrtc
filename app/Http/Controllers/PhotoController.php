@@ -1,16 +1,9 @@
 <?php
-/**
- * @package    User Controller
- *
- * @copyright  2016 metamorphosis.tv
- * @author     Ajith, sparksupport.com
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- */
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Http\Requests;
 use App\Photo;
 use Illuminate\Support\Facades\DB;
@@ -34,26 +27,22 @@ class PhotoController extends Controller
         return view('photos/index', array('photos' => $photo));
     }
 
-    /**
-     * Delete photo uploaded by user.
-     *
-     * @param Photoid
-     * @return null
-     */
-
+    /*
+    * Delete photos uploaded by user.
+    * param Photo id
+    * Response 
+    */
     public function deletePhoto($photoid)
     {
         $Photo = Photo::find($photoid);    
         $Photo->delete();    
     }
 
-    /**
-     * Inser/Update user uploaded Photo.
-     *
-     * @param Photoid
-     * @return null
-     */
-
+    /*
+    * Delete photos uploaded by user.
+    * param Photo id
+    * Response 
+    */
     public function uploadPhoto(Request $request)
     {
         // Get Current user id
@@ -73,21 +62,14 @@ class PhotoController extends Controller
         }
         return view('photos/upload');
     }    
-
-    /**
-     * Upload photos by user.
-     *
-     * @return null
-     */
-
     public function userphoto()
     {
         if(!empty($_FILES)){
           $errors= array();
           $file_name = $_FILES['video_input4']['name'][0];
-          $file_size = $_FILES['video_input4']['size'][0];
-          $file_tmp  = $_FILES['video_input4']['tmp_name'][0];
-          $file_type = $_FILES['video_input4']['type'][0];
+          $file_size =$_FILES['video_input4']['size'][0];
+          $file_tmp =$_FILES['video_input4']['tmp_name'][0];
+          $file_type=$_FILES['video_input4']['type'][0];
           
           if($file_size > 2097152){
              $errors[]='File size must be excately 2 MB';

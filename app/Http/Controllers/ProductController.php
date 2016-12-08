@@ -1,46 +1,32 @@
 <?php
-/**
- * @package    User Controller
- *
- * @copyright  2016 metamorphosis.tv
- * @author     Ajith, sparksupport.com
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- */
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Http\Requests;
 use App\Product;
+use Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-
-    /**
-     * List video stations list.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function show()
     {
+        // Get user id.        
+        $user_id = Auth::user()->id;
+        // Get company id of the ogin user.
+        $companyId = DB::table('company_users')->select('companyid')->where('userid', $user_id)->get();
+
         // Get Video stations list
         $stations = DB::table('products')->select('*')
         ->where([
             ['products.station_type', '=', 'video'],
+            ['products.company_id', '=', $companyId[0]->companyid],
             ])
         ->paginate(20);
         return view('products/index', array('stations' => $stations));
     }
-
-    /**
-     * Get video stations list.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function detail($streamid)
     {
         // Get Video stations list
@@ -51,14 +37,7 @@ class ProductController extends Controller
         ->get();
         return view('products/detail', array('station' => $station));
     }
-    
-
-    /**
-     * Create Video/Radio Stations.
-     *
-     * @return null
-     */
-
+    //
     public function createProduct(Request $request) {
         if( isset($request->video) && $request->video == 0) {
             foreach ($request->video_station_name as $key => $value) {
@@ -95,13 +74,6 @@ class ProductController extends Controller
             }
         }
     }
-
-    /**
-     * Insert/Update video stations logo.
-     *
-     * @return null
-     */
-
     public function videoLogo() {
        if(isset($_FILES)){
           $errors= array();
@@ -133,13 +105,6 @@ class ProductController extends Controller
             'append' => false
             ]);
     }
-
-    /**
-     * Insert/Update video stations logo.
-     *
-     * @return null
-     */
-
     public function streamLogo($streamid) {
        if(isset($_FILES)){
           $errors= array();
@@ -173,14 +138,7 @@ class ProductController extends Controller
         $stream['station_logo'] = url('/').'/public/product-logo/'.$file_name;
         // Insert data;
         DB::table('products')->where('id', $streamid)->update($stream);
-    }  
-
-    /**
-     * Insert/Update audio stations logo.
-     *
-     * @return null
-     */
-
+    }    
     public function audioLogo() {
        if(isset($_FILES)){
           $errors= array();
@@ -211,13 +169,6 @@ class ProductController extends Controller
             'append' => false
             ]);
     }
-
-    /**
-     * Update Stations.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function updateProduct(Request $request)
     {
         $stream[$request->field] = $request->value;

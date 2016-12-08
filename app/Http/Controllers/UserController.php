@@ -1,11 +1,11 @@
 <?php
 /**
- * @package    User Controller
+ * User Controller
  *
- * @copyright  2016 metamorphosis.tv
- * @author     Ajith, sparksupport.com
+ * @copyright  2016 SparkSupport
+ * @author     Ajith
+ * @date       12-10-16
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
  */
 
 namespace App\Http\Controllers;
@@ -15,19 +15,19 @@ use App\User;
 use App\Company_user;
 use App\Company;
 use App\Role;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Validator;
 
+
 class UserController extends Controller
 {
-
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -39,7 +39,6 @@ class UserController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-
     protected function validator(array $data)
     {   
         return Validator::make($data, [
@@ -55,7 +54,6 @@ class UserController extends Controller
      * @param  array  $data
      * @return User
      */
-
     protected function createAdmin(Request $request)
     {
         $user = new User;
@@ -75,14 +73,12 @@ class UserController extends Controller
         $user->role()->save($role);
         return redirect('users');        
     }
-
     /**
      * Create a new admin user instance after a valid registration.
      *
      * @param  array  $data
      * @return User
      */
-
     protected function updateAdminInline(Request $request)
     {
         $user[$request->field] = $request->value;
@@ -92,14 +88,12 @@ class UserController extends Controller
         // Insert data;
         DB::table('users')->where('id', $request->userid)->update($user);
     }
-
     /**
      * Create a new User and Company details.
      *
      * @param  array  $data
      * @return User
      */
-
     protected function createCompany(Request $request)
     {
         $number = "";
@@ -127,14 +121,12 @@ class UserController extends Controller
 
         return  $company->id;      
     }
-
     /**
      * Create a new User and Company details.
      *
      * @param  array  $data
      * @return User
      */
-
     protected function createCustomer(Request $request)
     {
 
@@ -164,6 +156,11 @@ class UserController extends Controller
         }
         // Insert data.
         $user->save();
+        // foreach ($request->access as $key => $value) {
+        //     $role = new Role;
+        //     $role->permission = $value; // Role 1 for super admin.
+        //     $user->role()->save($role);
+        // }
         if($request->company_id != null && $request->userid == null){
             $companyuser = new Company_user;
             $companyuser->userid    = $user->id;
@@ -178,13 +175,23 @@ class UserController extends Controller
      * @param  int
      * @return Response
      */
-
     public function show()
     {
+        // Get user id.        
+        $user_id = Auth::user()->id;
+        // Get company id of the ogin user.
+        $companyId = DB::table('company_users')->select('companyid')->where('userid', $user_id)->get();
+        $companyUsers = DB::table('company_users')->select('userid')->where('companyid', $companyId[0]->companyid)->get();
+
+        foreach($companyUsers as $user) {
+            $users[] = $user->userid;
+        }
+        
         // Get amdin users list
         $users = DB::table('users')->select('*')
-                ->where([['role', '!=', '1'],])
-                ->get();
+            ->where([ ['role', '!=', '1'], ])
+            ->whereIn('id', $users)
+            ->get();
 
         return view('user/index', array('users' => $users));
     }
@@ -193,87 +200,49 @@ class UserController extends Controller
         // Get Customer users list
         $data['users'] = DB::table('users')->where('active', 1)->orderBy('created_at', 'desc')->get();
         $data['country'] = DB::table('countries')->get();
-
         return view('user/customer', array('data' => $data));
     }
-
     /**
-     * Show the admin users list.
+     * Show the users list.
      *
      * @param  int
      * @return Response
      */
-
     public function adminUser()
     {
         // Get amdin users list
         $users = DB::table('users')->select('*')->join('roles', 'users.id', '=', 'roles.user_id')
-                ->where([['roles.role', '=', '1'],])
-                ->paginate(20);
-
+        ->where([
+            // ['users.active', '=', '1'],
+            ['roles.role', '=', '1'],
+            ])
+        ->paginate(20);
         return view('admin/index', array('users' => $users));
     }
-
-    /**
-     * Show the admin users list.
-     *
-     * @return Response
-     */
-
     public function adminCustomer()
     {
         // Get Customer users list
         $data['companies'] = DB::table('companies')->select('*')->orderBy('created_at', 'desc')->paginate(20);
         foreach ($data['companies'] as $key => $value) {
             $data['users'][$key] = DB::table('company_users')->select('*')
-                                ->rightJoin('users', 'company_users.userid', '=', 'users.id')
-                                ->where('companyid',$value->id)
-                                ->get();
-
-            $data['products'][$key] = DB::table('products')->select('*')
-                                ->where('company_id',$value->id)
-                                ->get();
+            ->rightJoin('users', 'company_users.userid', '=', 'users.id')->where('companyid',$value->id)->get();
+            $data['products'][$key] = DB::table('products')->select('*')->where('company_id',$value->id)->get();
         }
         $data['country'] = DB::table('countries')->get();
-
         return view('admin/customer', array('data' => $data));
     }
-
-    /**
-     * Delete User.
-     *
-     * @param  id
-     * @return redirect back
-     */
-
     public function deleteUser($id)
     {
         $user = User::find($id);    
         $user->delete();    
         return redirect()->back();
     }
-
-    /**
-     * Delete Company.
-     *
-     * @param  Company id
-     * @return Company name
-     */
-
     public function deleteCompany($companyid)
     {
         $Company = Company::find($companyid);   
         $Company->delete();    
         return $Company['company_name'];
     }
-
-    /**
-     * Update adminUser.
-     *
-     * @param  id
-     * @return redirect back
-     */
-
     public function updateAdmin(Request $request)
     {
         $user['email']        = $request->email;
@@ -288,14 +257,6 @@ class UserController extends Controller
         DB::table('users')->where('id', $request->user_id)->update($user);
         return redirect()->back();
     }
-
-    /**
-     * Update Company.
-     *
-     * @param  Company id
-     * @return Company name
-     */
-
     public function updateCompany(Request $request)
     {
         $company['address']       = $request->address;
@@ -314,14 +275,6 @@ class UserController extends Controller
         // Insert data;
         DB::table('companies')->where('id', $request->company_id)->update($company);
     }
-
-
-    /**
-     * Update Company timezone.
-     *
-     * @param  Company id
-     * @return null
-     */
 
     public function updateTimezone(Request $request)
     {

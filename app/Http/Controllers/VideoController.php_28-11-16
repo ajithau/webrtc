@@ -192,6 +192,36 @@ class VideoController extends Controller
             rename("{$filePath}.part", $newfilename);
         }
 
+        // CreateThumbnail
+        $filename = pathinfo($newfilename, PATHINFO_FILENAME);
+        $thumbnail = $targetDir.'/'.$filename.'_600.jpg';
+        shell_exec("ffmpeg -i ".$newfilename." -vf scale=663:378 -deinterlace -an -ss 1 -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg ".$thumbnail." 2>&1");
+        $thumbnail2 = $targetDir.'/'.$filename.'_290.jpg';
+        shell_exec("ffmpeg -i ".$newfilename." -vf scale=295:220 -deinterlace -an -ss 1 -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg ".$thumbnail2." 2>&1");
+        $thumbnail1 = $targetDir.'/'.$filename.'_130.jpg';
+        shell_exec("ffmpeg -i ".$newfilename." -vf scale=130:80 -deinterlace -an -ss 1 -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg ".$thumbnail1." 2>&1");
+        
+        $vtt = "WEBVTT\n\n";
+        $vtt .= "00:00.000 --> 00:00.000\n";
+        $vtt .= $filename.'_130.jpg';
+        $vtt .= "\n\n";
+        $fp = fopen($targetDir."/".$filename.".vtt","wb");
+        fwrite($fp,$vtt);
+        fclose($fp);
+
+        // file_put_contents($targetDir."/".$filename."/thumbnails.vtt", $thumbnail1);
+
+        $bitrate = $targetDir.'/'.$filename.'_240.mp4';
+        shell_exec("ffmpeg -i ".$newfilename." -s 426x240 -c:a copy ".$bitrate."> /dev/null &");
+        $bitrate = $targetDir.'/'.$filename.'_360.mp4';
+        shell_exec("ffmpeg -i ".$newfilename." -s 640x360 -c:a copy ".$bitrate."> /dev/null &");
+        $bitrate = $targetDir.'/'.$filename.'_480.mp4';
+        shell_exec("ffmpeg -i ".$newfilename." -s 854x480 -c:a copy ".$bitrate."> /dev/null &");
+        $bitrate = $targetDir.'/'.$filename.'_720.mp4';
+        shell_exec("ffmpeg -i ".$newfilename." -s 1280x720 -c:a copy ".$bitrate."> /dev/null &");
+        $bitrate = $targetDir.'/'.$filename.'_1080.mp4';
+        shell_exec("ffmpeg -i ".$newfilename." -s 1920x1080 -c:a copy ".$bitrate."> /dev/null &");
+
         /*if(isset($newfilename)) {
             return $newfilename;
         } else {*/
@@ -232,84 +262,12 @@ class VideoController extends Controller
             $detail->meta_title        = $request->meta_title;
             $detail->title             = $request->title;
             $detail->duration          = $time;
-
-            $this->videotranscode($file);
             // Insert data;
             $video->detail()->save($detail);
         }
         return redirect('videos');
     }
 
-
-    /**
-     * Convert Video
-     *
-     * @param  int
-     * @return Response
-     */
-    public function videotranscode($file)
-    {
-        $videoname      = explode('.', $file);
-        $url            = explode('portal', $file);
-        $path           = explode('/', $file);
-        $newfilename    = $file;
-        $filename       = $videoname[0];
-        $vttname        = explode('/', $filename);
-        $targetDir      = $url[0].$path[6].'/'.$path[7];
-        // CreateThumbnail
-        //$filename = pathinfo($newfilename, PATHINFO_FILENAME);
-
-        $thumbnail = $filename.'_600.jpg';
-        shell_exec("ffmpeg -i ".$newfilename." -vf scale=663:378 -deinterlace -an -ss 1 -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg ".$thumbnail."> /dev/null 2>&1 &");
-        $thumbnail2 = $filename.'_290.jpg';
-        shell_exec("ffmpeg -i ".$newfilename." -vf scale=295:220 -deinterlace -an -ss 1 -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg ".$thumbnail2."> /dev/null 2>&1 &");
-        $thumbnail1 = $filename.'_130.jpg';
-        shell_exec("ffmpeg -i ".$newfilename." -vf scale=130:80 -deinterlace -an -ss 1 -t 00:00:01 -r 1 -y -vcodec mjpeg -f mjpeg ".$thumbnail1."> /dev/null 2>&1 &");
-        $opts = [
-          'library'    => 'ffmpeg',
-          'videotypes' => array('video/mp4', 'video/x-flv'),
-          'input'      => $newfilename,
-          'name'       => 'video',
-          'vttname'    => $vttname[8],
-          'output'     => $targetDir,
-          'timespan'   => '10',
-          'width'      => 120,
-          'verbose'    => FALSE,
-          'poster'     => TRUE,
-          'delete'     => TRUE
-        ];
-
-        try {
-          $var = $this->createthumbnail($opts);
-        } catch(ThumbnailWebVttException $e) {
-          $var = false;
-          echo $e->getMessage();
-        }
-        $smil_video = explode('.', $path[8]);
-        $smil = '<smil><head></head><body><switch>
-<video src="mp4:'.$smil_video[0].'_1080.mp4" system-bitrate="10800000" systemLanguage="eng" width="1080" />
-<video src="mp4:'.$smil_video[0].'_720.mp4" system-bitrate="720000" systemLanguage="eng" width="720" />
-<video src="mp4:'.$smil_video[0].'_480.mp4" system-bitrate="480000" systemLanguage="eng" width="480" />
-<video src="mp4:'.$smil_video[0].'_360.mp4" system-bitrate="360000" systemLanguage="eng" width="360" />
-<video src="mp4:'.$smil_video[0].'_240.mp4" system-bitrate="240000" systemLanguage="eng" width="240" /></switch></body></smil>';
-        
-        // file_put_contents($targetDir."/".$filename."/thumbnails.vtt", $thumbnail1);
-        $smil_file = fopen($filename.".smil","wb");
-        fwrite($smil_file,$smil);
-        fclose($smil_file);
-
-        $bitrate = $filename.'_240.mp4';
-        shell_exec("ffmpeg -i ".$newfilename." -s 426x240 -c:a copy ".$bitrate."> /dev/null  2>&1 &");
-        $bitrate = $filename.'_360.mp4';
-        shell_exec("ffmpeg -i ".$newfilename." -s 640x360 -c:a copy ".$bitrate."> /dev/null  2>&1 &");
-        $bitrate = $filename.'_480.mp4';
-        shell_exec("ffmpeg -i ".$newfilename." -s 854x480 -c:a copy ".$bitrate."> /dev/null  2>&1 &");
-        $bitrate = $filename.'_720.mp4';
-        shell_exec("ffmpeg -i ".$newfilename." -s 1280x720 -c:a copy ".$bitrate."> /dev/null  2>&1 &");
-        $bitrate = $filename.'_1080.mp4';
-        shell_exec("ffmpeg -i ".$newfilename." -s 1920x1080 -c:a copy ".$bitrate."> /dev/null  2>&1 &");
-    }
-    
     /**
      * Update Video
      *
@@ -320,7 +278,7 @@ class VideoController extends Controller
     {
         $video[$request->field] = $request->value;
         // Insert data;
-        DB::table('video_details')->where('id', $request->videoid)->update($video);
+        DB::table('video_details')->where('video_id', $request->videoid)->update($video);
     }
 
     /**
@@ -516,88 +474,4 @@ class VideoController extends Controller
             die('{"jsonrpc" : "2.0", "result" : "'.$newfilename.'", "id" : "id"}');
         //}
     } 
-
-    public function createthumbnail($opts) {
-        $params = [
-            'library'     => 'ffmpeg', // the ffmpeg command - full path if needs be
-            'input'       => null,     // input video file - specified as command line parameter
-            'output'      => __DIR__,  // The output directory
-            'timespan'    => 10,       // seconds between each thumbnail
-            'thumbWidth'  => 120,      // thumbnail width
-            'spriteWidth' => 10,       // number of thumbnails per row in sprite sheet
-            'videotypes'  => array('video/mp4')
-        ];
-
-        // process input parameters
-        if (isset($opts['library'])) {
-            $params['library'] = $opts['library'];
-        }
-        $params['input'] = escapeshellarg($opts['input']);
-        if (isset($opts['output'])) {
-            $params['output'] = realpath($opts['output']);
-        }
-        if (isset($opts['timespan']) && (int)$opts['timespan']) {
-            $params['timespan'] = $opts['timespan'];
-        }
-        if (isset($opts['width']) && (int)$opts['width']) {
-            $params['thumbWidth'] = $opts['width'];
-        }
-
-        if (isset($opts['videotypes']) && is_array($opts['videotypes'])) {
-            $params['videotypes'] = $opts['videotypes'];
-        }
-
-        $commands = [
-            'details' => $params['library'] . ' -i %s 2>&1',
-            'poster'  => $params['library'] . ' -ss %d -i %s -y -vframes 1 "%s/%s-poster.jpg" 2>&1',
-            'thumbs'  => $params['library'] . ' -ss %0.04f -i %s -y -an -sn -vsync 0 -q:v 5 -threads 1 '
-                . '-vf scale=%d:-1,select="not(mod(n\\,%d))" "%s/thumbnails/%s-%%04d.jpg" 2>&1'
-        ];
-
-        $details = shell_exec(sprintf($commands['details'], $params['input']));
-        // determine some values we need
-        $time = $fps = [];
-        preg_match('/Duration: ((\d+):(\d+):(\d+))\.\d+, start: ([^,]*)/is', $details, $time);
-        preg_match('/\b(\d+(?:\.\d+)?) fps\b/', $details, $fps);
-
-        $duration = ($time[2] * 3600) + ($time[3] * 60) + $time[4];
-        $start = $time[5];
-        $fps = $fps[1];
-        $total = round($duration/$opts['timespan']);
-        
-        $vtt = "WEBVTT\n\n";
-        for ($rx = $ry = $s = $f = 0; $f < $total; $f++) {
-            $t1 = sprintf('%02d:%02d:%02d.000', ($s / 3600), ($s / 60 % 60), $s % 60);
-            $s += $params['timespan'];
-            $t2 = sprintf('%02d:%02d:%02d.000', ($s / 3600), ($s / 60 % 60), $s % 60);
-            $thumbnail = $opts['output'].'/'.$opts['vttname'].$f.'.jpg';
-        shell_exec("ffmpeg -i ".$opts['input']." -vf scale=130:80 -deinterlace -an -ss ".$t1." -r 1 -y -vcodec mjpeg -f mjpeg ".$thumbnail." > /dev/null  2>&1 &");
-            $vtt .= "{$t1} --> {$t2}\n" . $opts['vttname'].$f.'.jpg'."\n\n";
-
-        }
-        $vtt .= "\n\n";
-        $fp = fopen($opts['output']."/".$opts['vttname'].".vtt","wb");
-        fwrite($fp,$vtt);
-        fclose($fp);
-
-    }
-
-
-    /**
-     * Check url & Content-Type (eg. 'video/mp4')
-     *
-     */
-    public function checkurl($url, $videotypes) {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $data = curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-        curl_close($ch);
-
-        return ($data !== false && $httpcode === 200 && in_array($contentType, $videotypes));
-    }
 }
