@@ -18,6 +18,9 @@
     <link href="{{ URL::to('/') }}/css/plugins/fileinput/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
     <link href="{{ URL::to('/') }}/css/animate.css" rel="stylesheet">
     <link href="{{ URL::to('/') }}/css/style.css" rel="stylesheet">
+    <link href="{{ URL::to('/') }}/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="{{ URL::to('/') }}/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+
     <!-- Data Tables -->
     <link href="{{ URL::to('/') }}/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
     <link href="{{ URL::to('/') }}/css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
@@ -86,6 +89,9 @@
     
     <!-- Select Picker -->
     <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+
+    <!-- iCheck -->
+    <script src="{{ URL::to('/') }}/js/plugins/iCheck/icheck.min.js"></script>
 
     <!-- Bootbox -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>

@@ -13,19 +13,19 @@
 
 @section('content')
 <?php
-    //echo "<pre>";
-    //print_r($ads);
+    // echo "<pre>";
+    // print_r($ads);
 ?>
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-12">
-        <h2>Advertising</h2>                                 
-    </div>            
-</div>
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-6">
-            <!-- START: Accordion -->
-            <div class="panel-group accordion-panel-colour" id="accordion" role="tablist" aria-multiselectable="true">
+           <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-12">
+                    <h2>Advertising</h2>                                 
+                </div>            
+            </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                    <div class="col-lg-6">
+                        <!-- START: Accordion -->
+                        <div class="panel-group accordion-panel-colour" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
       <h4 class="panel-title">
@@ -91,18 +91,16 @@
             ?>
             <tr class="gradeX">
                 <td>                        	
-                    <a href="#" value="{{ $ad_video->advertisement_id }}" class="adpopup" >
-                		<img src="{{ url('/') }}/public{{ $img[1] }}_130.jpg" alt="">&nbsp;
+                    <a href="#">
+                		<img width="25px" src="{{ url('/') }}/public{{ $img[1] }}_130.jpg" alt="">&nbsp;
                         {{ $ad_video->library }}
                     	</a>
                 	</td>
-                <td><div class="text-center"><button class="btn btn-xs btn-primary delete-ad" value="{{ $ad_video->advertisement_id }}" type="button"><i class="fa fa-times"></i></button></div></td>
-                <td><div class="text-center"><button class="btn btn-xs btn-primary" type="button" data-toggle="modal" data-target="#embedCodeModal{{ $ad_video->advertisement_id }}"><i class="fa fa-code"></i></button></div></td>		
+                <td><div class="text-center"><button class="btn btn-xs btn-primary delete-ad" value="{{ $ad_video->id }}" type="button"><i class="fa fa-times"></i></button></div></td>
+                <td><div class="text-center"><button class="btn btn-xs btn-primary" type="button" data-toggle="modal" data-target="#embedCodeModal"><i class="fa fa-code"></i></button></div></td>		
             </tr>  
-            <div class="modal" id="videopopup{{ $ad_video->advertisement_id }}">
-            </div>
             <!-- START: Embed Code Modal -->
-            <div class="modal" id="embedCodeModal{{ $ad_video->advertisement_id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal" id="embedCodeModal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog">
                 <div class="modal-content animated fadeIn">
                         <div class="modal-header">
@@ -120,16 +118,13 @@
                             <label for="inlineRadio2"> No </label>
                         </div>
                          <div class="input-group">
-                            <?php
-                                $xml = explode('public', $ad_video->provider_xml);
-                            ?>
-                            <input type="text" name="embedded" class="form-control" id="embeded" value='<div id="player"><script type="text/javascript">var playerInstance = jwplayer("player");playerInstance.setup({image: "http://ddwc.metamorphosis.tv/poster/ddwc.png",sources: [{ file: "{{ url("/") }}/public{{ $img[1] }}.mp4" }], autostart: "true",androidhls: "true",abouttext: "Metamorphosis",aboutlink: "http://www.metamorphosis.tv",aspectratio: "100%",advertising: {
-                        client: "vast",
-                        @if($ad_video->provider_xml == 1){
-                        skipoffset: 5,
-                        @endif
-                        schedule: "{{ url("/") }}/public{{$xml[1]}}"}});</script></div>'><span class="input-group-btn"> 
-                    <button class="btn btn-primary copy" type="button"><i class="fa fa-copy"></i> Copy</button>
+                            <input type="text" class="form-control" id="embeded" value='<script type="text/javascript">var playerInstance = jwplayer("player");playerInstance.setup({image: "http://ddwc.metamorphosis.tv/poster/ddwc.png",sources: [{ file: "{{ url("/") }}/public " }], autostart: "true",androidhls: "true",abouttext: "Metamorphosis",aboutlink: "http://www.metamorphosis.tv",aspectratio: "16:9",height: 378,width: 663,advertising: {client: "vast",
+                                            schedule: {
+                                                postroll:{
+                                                    tag: "http://demo.tremorvideo.com/proddev/vast/vast2RegularLinear.xml",
+                                                    offset: "post"
+                                                }}}});</script>'><span class="input-group-btn"> 
+                    <button class="btn btn-primary" type="button"><i class="fa fa-copy"></i> Copy</button>
                       </span></div>
                         </div>
                         <div class="modal-footer">
@@ -155,7 +150,7 @@
                 <h5><i class="fa fa-cog"></i> Advertising Details</h5>
             </div>
             <div class="ibox-content">
-            {!! Form::open(array('url' => 'addAdvertisement', 'class' => 'form-horizontal', 'id' => 'ad-form')) !!}
+            {!! Form::open(array('url' => 'addAdvertisement', 'class' => 'form-horizontal')) !!}
                 <div class="form-group"><label class="col-sm-2 control-label">Ad Source:</label>
 					  <div class="col-sm-10">
                        <div class="radio radio-green radio-inline">
@@ -178,19 +173,19 @@
                         <select class="select-ad-provider" name="ad_provider[]">
 							<option value=""></option>
                             @foreach ($providers as $provider)
-                            <option value="{{ $provider['vast_tag'] }}">{{ $provider['provider_name'] }}</option>
+                            <option value="{{ $provider['id'] }}">{{ $provider['provider_name'] }}</option>
                             @endforeach
 						</select>
                      </div>
                      <div class="col-sm-2"><button class="btn btn-primary btn-outline ad-provider-select" type="button"><i class="fa fa-plus"></i></button></div>
                 </div>
                  <div id="ad_providers"></div>
-                <div class="form-group adprovider" id="fall_ad_provider"><label class="col-sm-2 control-label"></label>
+                <div class="form-group" id="fall_ad_provider"><label class="col-sm-2 control-label"></label>
 					  <div class="col-sm-8">
                        <select class="select-fallback-ad-provider" name="fall_provider[]">
 							<option value=""></option>
                             @foreach ($providers as $provider)
-                            <option value="{{ $provider['vast_tag'] }}">{{ $provider['provider_name'] }}</option>
+                            <option value="{{ $provider['id'] }}">{{ $provider['provider_name'] }}</option>
                             @endforeach
 						</select>
                      </div>
@@ -204,62 +199,87 @@
                 <div id="fall_ad_providers"></div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group"><label class="col-sm-2 control-label">Video Library:</label>
-                    <div class="col-sm-10">
-                        <select class="select-videos" name="selected_video[]" required>
-                            <option value=""></option>
-                            @foreach($videos as $value)
-                                <?php $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $value->video);
-                                $img = explode('public', $withoutExt); ?>
-                                <option data-subtitle="{{$value->duration}}" data-url="{{$value->video}}" value="{{$value->id}}" data-left="<img src='{{url('/')}}/public{{$img[1]}}_130.jpg'>">{{$value->title}}</option>;
-                            @endforeach
-                        </select>
-                    </div>                                     
-                </div>
-                <div class="hr-line-dashed"></div>
-                <div class="form-group"><label class="col-sm-2 control-label">Ad Type:</label>
                       <div class="col-sm-10">
-                       <select name="ad_type_tag" id="" class="form-control" required>
-                        <option value=""></option>
-                        <option value="google">Google IMA</option>
-                        <option value="scheduled">VMAP</option>
-                        <option value="preroll">Preroll</option>
-                        <option value="postroll">Postroll</option>
-                        <option value="scheduled">Scheduled Ad Breaks</option>
-                       </select>
-                     </div>
-                </div>
-                <div class="hr-line-dashed"></div>
-            </div>
-            <!-- End Ad provider -->
-            <!-- Video Lib -->
-            <div class="ad-video-lib">
-                <div class="form-group"><label class="col-sm-2 control-label">Video Library:</label>
-                     <div class="col-sm-10">
-                        <select class="select-videos" name="selected_video[]" required>
-                            <option value=""></option>
-                            @foreach($videos as $value)
-                                <?php $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $value->video);
-                                $img = explode('public', $withoutExt); ?>
-                                <option data-subtitle="{{$value->duration}}" data-url="{{$value->video}}" value="{{$value->id}}" data-left="<img src='{{url('/')}}/public{{$img[1]}}_130.jpg'>">{{$value->title}}</option>;
-                            @endforeach
-                        </select>
+                            <select class="select-videos">
+                                <option value=""></option>
+                                @foreach($videos as $value)
+                                    <?php $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $value->video);
+                                    $img = explode('public', $withoutExt); ?>
+                                    <option data-subtitle="{{$value->duration}}" data-url="{{$value->video}}" value="{{$value->id}}" data-left="<img src='{{url('/')}}/public{{$img[1]}}_130.jpg'>">{{$value->title}}</option>;
+                                @endforeach
+                            </select>
                      </div>                                     
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group"><label class="col-sm-2 control-label">Ad Type:</label>
                       <div class="col-sm-10">
-                       <select name="ad_type_library" id="" class="form-control" required="">
+                       <select name="ad_type" id="" class="form-control">
                         <option value=""></option>
+                        <option value="scheduled">Scheduled Ad Breaks</option>
+                       </select>
+                     </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="video-play">
+                    <div class="form-group">
+                    <div class="col-sm-12 text-info"><h3>Video Title</h3></div>
+                     </div>
+                         <div class="form-group"> 
+                         <div class="col-sm-12 no-padding">
+                         <div id="player">Loading the player...</div>
+                         </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                </div>
+                <div class="noui">
+                    <div class="form-group">                                  
+                        <div class="col-sm-11">
+                        <!-- Slider --> 
+                            <span class="noUi-connect" id="slider"></span>
+                            <span id="field"></span>
+                        </div>
+                        <div class="col-sm-1"><button class="btn btn-primary" type="button" id="break"><i class="fa fa-plus ad_time"></i></button></div>
+                    </div>
+                    <div class="form-group ad_break">                                  
+
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                </div>
+
+            
+            </div>
+            <!-- End Ad provider -->
+
+            <!-- End Video Lib -->
+            <div class="ad-video-lib">
+                <div class="form-group"><label class="col-sm-2 control-label">Video Library:</label>
+                      <div class="col-sm-10">
+                            <select class="select-videos">
+                                <option value=""></option>
+                                @foreach($videos as $value)
+                                    <?php $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $value->video);
+                                    $img = explode('public', $withoutExt); ?>
+                                    <option data-subtitle="{{$value->duration}}" data-url="{{$value->video}}" value="{{$value->id}}" data-left="<img src='{{url('/')}}/public{{$img[1]}}_130.jpg'>">{{$value->title}}</option>;
+                                @endforeach
+                            </select>
+                     </div>                                     
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group"><label class="col-sm-2 control-label">Ad Type:</label>
+                      <div class="col-sm-10">
+                       <select name="ad_type" id="" class="form-control">
+                        <option value=""></option>
+                        <option value="scheduled">Scheduled Ad Breaks</option>
                         <option value="preroll">Preroll</option>
                         <option value="postroll">Postroll</option>
-                        <option value="scheduled">Scheduled Ad Breaks</option>
                        </select>
                      </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="form-group"><label class="col-sm-2 control-label">Video:</label>
                       <div class="col-sm-10">
-                        <select class="select-video" name="ad_video[]">
+                        <select class="select-video" name="video_id">
                             <option value=""></option>
                             @foreach($videos as $value)
                                 <?php $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $value->video);
@@ -270,11 +290,34 @@
                      </div>
                 </div>
                 <div class="hr-line-dashed"></div>
+
+                <div class="video-play">
+                    <div class="form-group">
+                    <div class="col-sm-12 text-info"><h3>Video Title</h3></div>
+                     </div>
+                         <div class="form-group"> 
+                         <div class="col-sm-12 no-padding">
+                         <div id="player">Loading the player...</div>
+                         </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                </div>
+                <div class="noui">
+                    <div class="form-group">                                  
+                        <div class="col-sm-11">
+                        <!-- Slider --> 
+                            <span class="noUi-connect" id="slider"></span>
+                            <span id="field"></span>
+                        </div>
+                        <div class="col-sm-1"><button class="btn btn-primary" type="button" id="break"><i class="fa fa-plus ad_time"></i></button></div>
+                    </div>
+                    <div class="form-group ad_break">                                  
+
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                </div>
             </div>
             <!-- End Video Lib -->
-            <div id="video-ajax">
-
-            </div>                
             <div class="scheduled-ad">
                 <div class="form-group"><label class="col-sm-2 control-label">Scheduled Ad Breaks:</label>
 					  <div class="col-sm-10">
@@ -289,59 +332,6 @@
                      </div>
                 </div>
                 <div class="hr-line-dashed"></div>
-                <!-- START: Modal -->
-                    <div class="modal inmodal modal-provider" id="" tabindex="-1" role="dialog"  aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content animated fadeIn">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <span class="pull-left"><strong>Select Provider</strong> </span>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group ad-providers" id="provider-ajax">
-
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id=""  type="button" class="btn btn-white modal-remove" data-dismiss="modal">Close</button>
-                                    <button id="" type="submit" class="btn btn-primary modal-select" data-dismiss="modal">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <!-- END: Modal -->
-
-                <!-- START: Modal -->
-                    <div class="modal inmodal modal-videos" id="" tabindex="-1" role="dialog"  aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content animated fadeIn">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <span class="pull-left"><strong>Select video</strong> </span>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group"><label class="col-sm-2 control-label">Video:</label>
-                                          <div class="col-sm-10">
-                                            <select class="modal-video" name="video_id">
-                                                <option value=""></option>
-                                                @foreach($videos as $value)
-                                                    <?php $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $value->video);
-                                                    $img = explode('public', $withoutExt); ?>
-                                                    <option data-subtitle="{{$value->duration}}" data-url="{{$value->video}}" value="{{$value->id}}" data-left="<img src='{{url('/')}}/public{{$img[1]}}_130.jpg'>">{{$value->title}}</option>;
-                                                @endforeach
-                                            </select>
-                                         </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id=""  type="button" class="btn btn-white modal-remove" data-dismiss="modal">Close</button>
-                                    <button id="" type="submit" class="btn btn-primary modal-select" data-dismiss="modal">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <!-- END: Modal -->
-
             </div>
             <div class="companion-ad">
                 <div class="form-group"><label class="col-sm-2 control-label">Companion Ad:</label>
@@ -400,7 +390,7 @@
                 <div class="hr-line-dashed"></div>
             </div>
                 <div class="form-group">
-                <div class="col-sm-12 save-ad">
+                <div class="col-sm-12">
                 <button type="submit" class="btn btn-w-m btn-primary pull-right">Save</button>
 					</div>
 				 </div>
@@ -410,36 +400,30 @@
         {!! Form::close() !!}
     </div>        
     </div>
-    </div>      
+    </div>
+    <?php 
+    // $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $video[0]['video']);
+    // $video_path = explode('public', $video[0]['video']); 
+    // $img_path   = explode('public', $withoutExt);
+    ?>      
     <!-- JW PLayer -->
     <script src="http://content.jwplatform.com/libraries/D219T2Wf.js"></script>
 
     <script type="text/javascript">
-    var baseUrl = document.location.origin;
 
     $(".select-videos").change(function(){
-        $(".video-play").css('display', 'block');
+        $("#video-play").css('display', 'block');
         var selected = $(this).find('option:selected');
         var file = selected.data('url'); 
-        var duration = selected.data('subtitle'); 
         file = file.split('/');
-        img = file[8].split('.');
-        var wowsa = 'rtmp://104.196.194.7:1935/portal/_definst_/mp4:';
-        
-        var a = duration.split(':'); // split it at the colons
-        // minutes are worth 60 seconds. Hours are worth 60 minutes.
-        var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]); 
-
-        console.log(duration);
         $( document ).ready(function() {
             var playerInstance = jwplayer("player");
             playerInstance.setup({
-                image: baseUrl+'/public/portal/'+file[7]+'/'+img[0]+'_600.jpg', 
+                image: "http://ddwc.metamorphosis.tv/poster/ddwc.png", 
                 sources: [{ 
-                    file: wowsa+'/'+file[7]+'/'+file[8]
+                    file: baseUrl+'/public/videos/'+file[7]+'/'+file[8]
                 }],    
             autostart: "false",
-            fallback: 'false',
             androidhls: "true",
             abouttext: "Metamorphosis",
             aboutlink: "http://www.metamorphosis.tv",
@@ -447,25 +431,29 @@
             height: "100%",
             width: "100%",
             });
-
-            var slider = document.getElementById('slider');
-            noUiSlider.create(slider, {
-              start: [ 0 ],
-              tooltips: [ true ],
-              range: {
-                'min': [  0 ],
-                'max': [ seconds ]
-              }
-            })
-            var rangeSliderValueElement = document.getElementById('field');
-
-              slider.noUiSlider.on('update', function( values, handle ) {
-              rangeSliderValueElement.innerHTML = Math.round(values)+' Seconds';
-              if(values[handle] != '0.00') {
-                playerInstance.seek(values[handle])
-              }
-            });
         });
     });
+
+  $( document ).ready(function() {
+
+    var slider = document.getElementById('slider');
+
+    noUiSlider.create(slider, {
+      start: [ 0 ],
+      range: {
+        'min': [  0 ],
+        'max': [ 634 ]
+      }
+    })
+    var rangeSliderValueElement = document.getElementById('field');
+
+    slider.noUiSlider.on('update', function( values, handle ) {
+      rangeSliderValueElement.innerHTML = Math.round(values)+' Seconds';
+      if(values[handle] != '0.00') {
+        jwplayer("player").seek(values[handle])
+      }
+    });
+
+  });
   </script>
 @endsection

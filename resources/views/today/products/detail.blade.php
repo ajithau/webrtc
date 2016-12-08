@@ -12,9 +12,7 @@
 @section('title', 'Main page')
 
 @section('content')
-<?php
-$json = file_get_contents('http://104.196.194.7:8086/livestreams');
-?>
+
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>Live Stream Ingest</h2>
@@ -30,14 +28,14 @@ $json = file_get_contents('http://104.196.194.7:8086/livestreams');
             </li>
         </ol>                    
     </div>
-    <!-- <div class="col-lg-2">
+    <div class="col-lg-2">
         <div class="title-action">
             <select class="selectpicker" data-live-search="true" id="channel_name">
             <option value="CNC3">CNC3</option>
             <option value="WTWG">WTWG</option>
             </select>
         </div>
-    </div> -->
+    </div>
     </div>
         <div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
@@ -52,25 +50,19 @@ $json = file_get_contents('http://104.196.194.7:8086/livestreams');
                             <div class="row">
                                 <div class="col-lg-12">
                                 <figure>
-                                <div id="player"></div>
+                                <iframe width="100%" height="500" src="http://www.youtube.com/embed/bwj2s_5e12U" frameborder="0" allowfullscreen></iframe>
                             </figure>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
                                 <div class="col-lg-6">
                                     <div class="padding-15">
-                                        <strong>Media ID:</strong> {{$station[0]->id}}     
+                                        <strong>Media ID:</strong> 12345678     
                                     </div>                              
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="padding-15">
-                                        <?php 
-                                            if (strpos($json, $station[0]->station_instance) !== false) {
-                                                echo '<strong>Online:</strong></i><i class="fa fa-circle online"></i>';
-                                            } else {
-                                                echo '<strong>Offline:</strong><i class="fa fa-circle offline"></i>';
-                                            }
-                                        ?>
+                                        <strong>Online:</strong> <i class="fa fa-circle online"></i>
                                     </div>                                  
                                 </div>
                             </div>
@@ -150,13 +142,13 @@ $json = file_get_contents('http://104.196.194.7:8086/livestreams');
                                                  <div class="input-group">
                                                  <select name="" id="" class="form-control">
                                         <option value="">Adaptive Bit Rate</option>
-                                        <option value="http://104.196.194.7:1935/live/ngrp:{{$station[0]->station_instance}}_1080/playlist.m3u8">1080p -HD</option>
-                                        <option value="http://104.196.194.7:1935/live/ngrp:{{$station[0]->station_instance}}_720/playlist.m3u8">720p - HD</option>
-                                        <option value="http://104.196.194.7:1935/live/ngrp:{{$station[0]->station_instance}}_480/playlist.m3u8">480p - SD</option>
-                                        <option value="http://104.196.194.7:1935/live/ngrp:{{$station[0]->station_instance}}_360/playlist.m3u8">360p - SD</option>
-                                        <option value="http://104.196.194.7:1935/live/ngrp:{{$station[0]->station_instance}}_240/playlist.m3u8">240p - SD</option>
+                                        <option value="">1080p -HD</option>
+                                        <option value="">720p - HD</option>
+                                        <option value="">480p - SD</option>
+                                        <option value="">360p - SD</option>
+                                        <option value="">240p - SD</option>
                                     </select> <span class="input-group-btn"> 
-                                    <button class="btn btn-primary copy" type="button"><i class="fa fa-copy"></i> Copy</button>
+                                    <button class="btn btn-primary" type="button"><i class="fa fa-copy"></i> Copy</button>
                                       </span></div>
                                     </div>
                                 </div>
@@ -166,13 +158,13 @@ $json = file_get_contents('http://104.196.194.7:8086/livestreams');
                                                  <div class="input-group">
                                                  <select name="" id="" class="form-control">
                                         <option value="">Adaptive Bit Rate</option>
-                                        <option value="http://104.196.194.7:1935/live/{{$station[0]->station_instance}}_1080/manifest.mpd">1080p -HD</option>
-                                        <option value="http://104.196.194.7:1935/live/{{$station[0]->station_instance}}_720/manifest.mpd">720p - HD</option>
-                                        <option value="http://104.196.194.7:1935/live/{{$station[0]->station_instance}}_480/manifest.mpd">480p - SD</option>
-                                        <option value="http://104.196.194.7:1935/live/{{$station[0]->station_instance}}_360/manifest.mpd">360p - SD</option>
-                                        <option value="http://104.196.194.7:1935/live/{{$station[0]->station_instance}}_240/manifest.mpd">240p - SD</option>
+                                        <option value="">1080p -HD</option>
+                                        <option value="">720p - HD</option>
+                                        <option value="">480p - SD</option>
+                                        <option value="">360p - SD</option>
+                                        <option value="">240p - SD</option>
                                     </select> <span class="input-group-btn"> 
-                                    <button class="btn btn-primary copy" type="button"><i class="fa fa-copy"></i> Copy</button>
+                                    <button class="btn btn-primary" type="button"><i class="fa fa-copy"></i> Copy</button>
                                       </span></div>
                                     </div>
                                 </div>
@@ -198,13 +190,13 @@ $json = file_get_contents('http://104.196.194.7:8086/livestreams');
                                                  <div class="input-group">
                                                  <select name="" id="" class="form-control">
                                         <option value="">Adaptive Bit Rate</option>
-                                        <option value="http://104.196.194.7:1935/live/{{$station[0]->station_instance}}_1080/Manifest">1080p -HD</option>
-                                        <option value="http://104.196.194.7:1935/live/{{$station[0]->station_instance}}_720/Manifest">720p - HD</option>
-                                        <option value="http://104.196.194.7:1935/live/{{$station[0]->station_instance}}_480/Manifest">480p - SD</option>
-                                        <option value="http://104.196.194.7:1935/live/{{$station[0]->station_instance}}_360/Manifest">360p - SD</option>
-                                        <option value="http://104.196.194.7:1935/live/{{$station[0]->station_instance}}_240/Manifest">240p - SD</option>
+                                        <option value="">1080p -HD</option>
+                                        <option value="">720p - HD</option>
+                                        <option value="">480p - SD</option>
+                                        <option value="">360p - SD</option>
+                                        <option value="">240p - SD</option>
                                     </select> <span class="input-group-btn"> 
-                                    <button class="btn btn-primary copy" type="button"><i class="fa fa-copy"></i> Copy</button>
+                                    <button class="btn btn-primary" type="button"><i class="fa fa-copy"></i> Copy</button>
                                       </span></div>
                                     </div>
                                 </div>
@@ -232,7 +224,7 @@ $json = file_get_contents('http://104.196.194.7:8086/livestreams');
                                             <label for="inlineRadio2"> No </label>
                                         </div>
                                                  <div class="input-group">
-                                            <input type="text" class="form-control" value='<div id="myElement"><script>var playerInstance = jwplayer("myElement");	playerInstance.setup({image: "",sources: [{	file: "http://104.196.194.7:1935/live/{{$station[0]->station_instance}}/playlist.m3u8"}], autostart: "true",	androidhls: "true",	"width": "100%", abouttext: "Metamorphosis", aboutlink: "http://www.metamorphosis.tv", aspectratio: "16:9"	});</script></div>'><span class="input-group-btn"> 
+                                            <input type="text" class="form-control" value="http://www.domain.com/video"><span class="input-group-btn"> 
                                     <button class="btn btn-primary" type="button"><i class="fa fa-copy"></i> Copy</button>
                                       </span></div>
                                     </div>
@@ -249,21 +241,6 @@ $json = file_get_contents('http://104.196.194.7:8086/livestreams');
     </div>
 </div>
 <script>
-	var playerInstance = jwplayer("player");
-	playerInstance.setup({
-		image: "",
-		sources: [{
-				file: "http://104.196.194.7:1935/live/ngrp:{{$station[0]->station_instance}}_all/playlist.m3u8"
-}
-],
-		autostart: "true",
-		androidhls: "true",
-		"width": "100%",
-		abouttext: "Metamorphosis",
-		aboutlink: "http://www.metamorphosis.tv",
-		aspectratio: "16:9"
-	});
-
 $(document).on('ready', function() {
     $("#input-7").fileinput({
         showCaption: false, 

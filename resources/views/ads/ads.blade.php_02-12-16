@@ -25,10 +25,18 @@ $video_path = explode('"', $video_path[1]);
     <meta name="author" content="">
 
     <title>Advertising Player</title>
+    <link href='http://fonts.googleapis.com/css?family=Just+Another+Hand' rel='stylesheet' type='text/css'> 
     <script src="http://content.jwplatform.com/libraries/D219T2Wf.js"></script> 
-    <style>
-    #player {
-        margin:40px auto 0 auto;
+    <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/grid.css" rel="stylesheet">
+    <style type="text/css">
+    body {
+      background-color: #CCCCCC;
     }
     </style>
 
@@ -43,7 +51,7 @@ $video_path = explode('"', $video_path[1]);
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-lg-12">
-        <div id="player" >Loading the player...</div>
+        <div id="player">Loading the player...</div>
           <script type="text/javascript">
 
           // set base url.

@@ -91,18 +91,16 @@
             ?>
             <tr class="gradeX">
                 <td>                        	
-                    <a href="#" value="{{ $ad_video->advertisement_id }}" class="adpopup" >
+                    <a href="#">
                 		<img src="{{ url('/') }}/public{{ $img[1] }}_130.jpg" alt="">&nbsp;
                         {{ $ad_video->library }}
                     	</a>
                 	</td>
-                <td><div class="text-center"><button class="btn btn-xs btn-primary delete-ad" value="{{ $ad_video->advertisement_id }}" type="button"><i class="fa fa-times"></i></button></div></td>
-                <td><div class="text-center"><button class="btn btn-xs btn-primary" type="button" data-toggle="modal" data-target="#embedCodeModal{{ $ad_video->advertisement_id }}"><i class="fa fa-code"></i></button></div></td>		
+                <td><div class="text-center"><button class="btn btn-xs btn-primary delete-ad" value="{{ $ad_video->id }}" type="button"><i class="fa fa-times"></i></button></div></td>
+                <td><div class="text-center"><button class="btn btn-xs btn-primary" type="button" data-toggle="modal" data-target="#embedCodeModal{{ $ad_video->id }}"><i class="fa fa-code"></i></button></div></td>		
             </tr>  
-            <div class="modal" id="videopopup{{ $ad_video->advertisement_id }}">
-            </div>
             <!-- START: Embed Code Modal -->
-            <div class="modal" id="embedCodeModal{{ $ad_video->advertisement_id }}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal" id="embedCodeModal{{ $ad_video->id }}" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog">
                 <div class="modal-content animated fadeIn">
                         <div class="modal-header">
@@ -221,7 +219,7 @@
                        <select name="ad_type_tag" id="" class="form-control" required>
                         <option value=""></option>
                         <option value="google">Google IMA</option>
-                        <option value="scheduled">VMAP</option>
+                        <option value="vmap">VMAP</option>
                         <option value="preroll">Preroll</option>
                         <option value="postroll">Postroll</option>
                         <option value="scheduled">Scheduled Ad Breaks</option>

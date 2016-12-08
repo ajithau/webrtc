@@ -21,12 +21,12 @@
         <h2>Customers</h2>                    
     </div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight"  ng-app="">
+<div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">                                
-                    <h5><i class="fa fa-list-alt"></i> Customer Details</h5>
+                    <h5><i class="fa fa-list-alt"></i> User Details</h5>
 					<div class="pull-right">
 	                	<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#add-user">Add Customer</button>
                 		<!-- START: Modal -->
@@ -36,7 +36,7 @@
                                     <div class="modal-content animated fadeIn">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                            <span class="pull-left"><strong>Add: @{{ name }}</strong></span>
+                                            <span class="pull-left"><strong>Add:</strong></span>
                                         </div>
                                         <div class="modal-body no-padding">
                                            <div class="panel-group accordion-panel-colour padding-top-10" id="accordion" role="tablist" aria-multiselectable="true">
@@ -53,7 +53,7 @@
         {!! Form::open(array('url' => 'users/createCustomer', 'class'=> 'user')) !!}
             <div class="form-group">
                 {{ Form::label('Company Name') }}
-                {{ Form::text('company_name', '', array('class' => 'form-control', 'placeholder' => 'Enter Company Name', 'ng-model' => 'name', 'required')) }} 
+                {{ Form::text('company_name', '', array('class' => 'form-control', 'placeholder' => 'Enter Company Name', 'required')) }} 
             </div>
             <div class="row">
                 <div class="col-sm-6">
@@ -102,7 +102,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                     {{ Form::label('Mobile Number') }}
-                    {{ Form::text('mobile', '', array('class' => 'form-control', 'placeholder' => 'Enter Mobile Number' )) }} 
+                    {{ Form::text('mobile', '', array('class' => 'form-control', 'placeholder' => 'Enter Mobile Number', 'required')) }} 
                     </div>
                 </div>
             </div>
@@ -202,7 +202,6 @@
                         <option value="Video Library">Video Library</option>
                         <option value="Advertising">Advertising</option>
                         <option value="Switcher">Switcher</option>
-                        <option value="Live Streaming">Live Streaming</option>
                         <optgroup label="User Submitted">
                         <option value="Video">Video</option>
                         <option value="Photos">Photos</option>
@@ -370,8 +369,8 @@
                         <th>Country</th>
                         <th>Created</th>
                         <th>Last Modified</th>
-                        <th style="width:8%"></th>
-                        <th style="width:8%"></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -379,10 +378,10 @@
                     <tr>
 						<td>{{ $companies->id }}</td>
 						<td>{{ $companies->api_key }}</td>
-						<td class="companyname">{{ $companies->company_name }}</td>
+						<td>{{ $companies->company_name }}</td>
 						<td>{{ $companies->country }}</td>
-						<td>{{ date( 'd/m/Y', strtotime( $companies->created_at ) ) }}</td>
-						<td>{{ date( 'd/m/Y', strtotime( $companies->updated_at ) ) }}</td>
+						<td>{{ $companies->created_at }}</td>
+						<td>{{ $companies->updated_at }}</td>
                         <td>
                             <div class="text-center">
                                 <button class="btn btn-xs btn-primary" type="button"  data-target="#edit-company{{ $companies->id }}"  data-toggle="modal"><i class="fa fa-pencil"></i></button>
@@ -407,7 +406,7 @@
                 <div class="modal-content animated fadeIn">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <span class="pull-left" ng-init="companyname='{{ $companies->company_name }}'"><strong>Edit: @{{companyname}}</strong></span>
+                        <span class="pull-left"><strong>Edit: {{ $companies->company_name }}</strong></span>
                     </div>
                     <div class="modal-body no-padding">
                        <div class="panel-group accordion-panel-colour padding-top-10" id="accordion{{ $companies->id }}" role="tablist" aria-multiselectable="true">
@@ -426,7 +425,7 @@
                                     <input type="hidden" name="company_id" value="{{ $companies->id }}">
                                     <div class="form-group"><label>Company Name</label> 
                                         {{ Form::label('Company Name') }}
-                                        {{ Form::text('company_name', $companies->company_name, array('class' => 'form-control', 'placeholder' => 'Enter Company Name', 'ng-model' => 'companyname')) }} 
+                                        {{ Form::text('company_name', $companies->company_name, array('class' => 'form-control', 'placeholder' => 'Enter Company Name')) }} 
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -524,209 +523,94 @@
                                 </a>
                               </h4>
                             </div>
-
-   <div id="collapseTwo{{ $companies->id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-Two">
-      <div class="panel-body">
-        @if(!isset($data['users'][$key][0]))
-        <!-- <form role="form"> -->
-        {!! Form::open(array('url' => '', 'class'=> 'user')) !!}
-            <input type="hidden" name="company_id" class="company_id">
-            <div class="form-group"><label>Role</label> 
-            <select name="user_type" id="" class="form-control">
-                <option value="">Select Role</option>
-                <option value="2">Super Admin</option>
-                <option value="3">Admin</option>
-                <option value="4">Content Editor</option>
-            </select>
-            </div>
-            <div class="row">
-                    <div class="col-sm-6">
-                    {{ Form::label('First Name') }}
-                    {{ Form::text('first_name', '', array('class' => 'form-control', 'placeholder' => 'Enter First Name', 'required')) }} 
-                    </div>
-                    <div class="col-sm-6">
-                    {{ Form::label('Last Name') }}
-                    {{ Form::text('last_name', '', array('class' => 'form-control', 'placeholder' => 'Enter Last Name', 'required')) }}                                     
-                    </div>
-                </div> 
-                <div class="row">
-                    <div class="col-sm-6">
-                    {{ Form::label('User Name') }}
-                    {{ Form::text('name', '', array('class' => 'form-control', 'placeholder' => 'Enter User Name', 'required')) }}
-                    </div>
-                    <div class="col-sm-6">
-                    {{ Form::label('Password') }}
-                    {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'Enter Password', 'required')) }}                                       </div>
-                </div> 
-                <div class="row">
-                    <div class="col-sm-6">
-                    {{ Form::label('Email Address') }}
-                    {{ Form::text('email', '', array('class' => 'form-control', 'placeholder' => 'Enter Email Address', 'required')) }}                                     
-                    </div>
-                    <div class="col-sm-6">
-                    {{ Form::label('Mobile Number') }}
-                    {{ Form::text('mobile', '', array('class' => 'form-control', 'placeholder' => 'Enter Mobile Number', 'required')) }}
-                    </div>
-                </div>
-            <div class="row" id="selects">
-                <div class="col-sm-6">
-                    <div class="form-group"><label>Access</label> 
-                    <select name="access" id="access" class="form-control selectpicker access" multiple title="Please select">
-                        <option value="User Management">User Management</option>
-                        <option value="Video Library">Video Library</option>
-                        <option value="Advertising">Advertising</option>
-                        <option value="Switcher">Switcher</option>
-                        <option value="Live Streaming">Live Streaming</option>
-                        <optgroup label="User Submitted">
-                        <option value="Video">Video</option>
-                        <option value="Photos">Photos</option>
-                      </optgroup>
-                    </select>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group"><label>Notifications</label> 
-                    <select name="notifications" id="notifications" class="form-control selectpicker notifications" multiple title="Please select">
-                        <option value="email">Email</option>
-                        <option value="sms">SMS</option>
-                    </select>
-                    </div>
-                </div>
-            </div>
-            <div class="pull-right">
-                <div class="btn-group">
-                <button class="btn btn-xs btn-primary btn-outline" type="button" id="extra-user">Add Another User</button>
-                <button class="btn btn-xs btn-primary usr-btn" value="" type="button">Save</button>
-            </div>
-            </div>          
-            {!! Form::close() !!}
-
-        <!-- </form>      -->
-        @endif
-        @foreach ($data['users'][$key] as $user)
-        <?php
-            $notification = unserialize($user->notification);
-            if(!is_array($notification)) {
-                $notification = array();
-            }
-            $access = unserialize($user->access);
-            if(!is_array($access)) {
-                $access = array();
-            }
-         ?>
-       <table class="table table-bordered table-responsive">
-            <thead>
-            <tr>
-                <th>Role</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Username</th>
-                <th style="width:8%"></th>
-                <th style="width:8%"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    @if($user->role == 2) 
-                        Super Admin 
-                    @elseif($user->role == 3)
-                        Admin
-                    @elseif($user->role == 4)
-                        Content Editor
-                    @endif
-                </td>
-                <td>{{$user->first_name}}</td>
-                <td>{{$user->last_name}}</td>
-                <td>{{$user->name}}</td>
-                <td><div class="text-center"><button class="btn btn-xs btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample{{$user->id}}" aria-expanded="false" aria-controls="collapseExample"><i class="fa fa-pencil"></i></button></div></td>
-                <td><div class="text-center"><button class="btn btn-xs btn-primary deleteUser" value="{{$user->id}}" type="button"><i class="fa fa-times"></i></button></div></td>
-            </tr>
-            </tbody>
-        </table>
-        <!-- START: Collapse -->
-        <div class="collapse" id="collapseExample{{$user->id}}">
-        <div id="new-user">
-        <!-- <form role="form"> -->
-            {!! Form::open(array('url' => '')) !!}
-                <div class="form-group"><label>Role</label> 
-                <select name="user_type" id="" class="form-control">
-                    <option value="">Select Role</option>
-                    <option value="2" @if($user->role == 2) selected @endif>Super Admin</option>
-                    <option value="3" @if($user->role == 3) selected @endif>Admin</option>
-                    <option value="4" @if($user->role == 4) selected @endif>Content Editor</option>
-                </select>
-                </div>
-                <div class="row">
-                        <div class="col-sm-6">
-                        {{ Form::label('First Name') }}
-                        {{ Form::text('first_name', $user->first_name, array('class' => 'form-control', 'placeholder' => 'Enter First Name', 'required')) }} 
-                        </div>
-                        <div class="col-sm-6">
-                        {{ Form::label('Last Name') }}
-                        {{ Form::text('last_name', $user->last_name, array('class' => 'form-control', 'placeholder' => 'Enter Last Name', 'required')) }}                                     
-                        </div>
-                    </div> 
-                    <div class="row">
-                        <div class="col-sm-6">
-                        {{ Form::label('User Name') }}
-                        {{ Form::text('name', $user->name, array('class' => 'form-control', 'placeholder' => 'Enter User Name', 'required')) }}
-                        </div>
-                        <div class="col-sm-6">
-                        {{ Form::label('Password') }}
-                        {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'Enter Password', 'required')) }}                                       </div>
-                    </div> 
-                    <div class="row">
-                        <div class="col-sm-6">
-                        {{ Form::label('Email Address') }}
-                        {{ Form::text('email', $user->email, array('class' => 'form-control', 'placeholder' => 'Enter Email Address', 'required')) }}                                     
-                        </div>
-                        <div class="col-sm-6">
-                        {{ Form::label('Mobile Number') }}
-                        {{ Form::text('mobile', $user->mobile, array('class' => 'form-control', 'placeholder' => 'Enter Mobile Number', 'required')) }}
-                        </div>
-                    </div>
-                <div class="row" id="selects">
-                    <div class="col-sm-6">
-                        <div class="form-group"><label>Access</label> 
-                        <select name="access" id="access" class="form-control selectpicker access" multiple title="Please select">
-                        <option value="User Management"@if(in_array('User Management',$access)) selected @endif>User Management</option>
-                        <option value="Video Library"@if(in_array('Video Library',$access)) selected @endif>Video Library</option>
-                        <option value="Advertising"@if(in_array('Advertising',$access)) selected @endif>Advertising</option>
-                        <option value="Switcher"@if(in_array('Switcher',$access)) selected @endif>Switcher</option>
-                        <option value="Live Streaming"@if(in_array('Live Streaming',$access)) selected @endif>Live Streaming</option>
-                        <optgroup label="User Submitted">
-                        <option value="Video"@if(in_array('Video',$access)) selected @endif>Video</option>
-                        <option value="Photos"@if(in_array('Photos',$access)) selected @endif>Photos</option>
-                      </optgroup>
-                    </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group"><label>Notifications</label> 
-                        <select name="notifications" id="notifications" class="form-control selectpicker notifications" multiple title="Please select">
-                            <option value="email" @if(in_array('email',$notification)) selected @endif>Email</option>
-                            <option value="sms" @if(in_array('sms',$notification)) selected @endif>SMS</option>
-                        </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="pull-right">
-                    <div class="btn-group">
-                    <button class="btn btn-xs btn-primary btn-outline" type="button" id="extra-user">Add Another User</button>
-                    <button class="btn btn-xs btn-primary usr-btn" type="button" value="{{$user->id}}">Save</button>
-                    <input type="hidden" name="company_id" value="{{ $companies->id }}">                                        
-                </div>
-                </div>          
-                {!! Form::close() !!}
-            <!-- </form> -->
-            </div>
-        </div>
-        <!-- END: Collapse -->        
-    @endforeach
-      </div>
-    </div>
-
+                            <div id="collapseTwo{{ $companies->id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo"> 
+                              @foreach ($data['users'][$key] as $user)
+                              <?php
+                                $notification = unserialize($user->notification);
+                                if(!is_array($notification)) {
+                                    $notification = array();
+                                }
+                                $access = unserialize($user->access);
+                                if(!is_array($access)) {
+                                    $access = array();
+                                }
+                              ?>
+                              <div class="panel-body" id="new-user">
+                                <!-- <form role="form"> -->
+                                {!! Form::open(array('url' => '')) !!}
+                                    <div class="form-group"><label>Role</label> 
+                                    <select name="user_type" id="" class="form-control">
+                                        <option value="">Select Role</option>
+                                        <option value="2" @if($user->role == 1) selected @endif>Super Admin</option>
+                                        <option value="3" @if($user->role == 2) selected @endif>Admin</option>
+                                        <option value="4" @if($user->role == 3) selected @endif>Content Editor</option>
+                                    </select>
+                                    </div>
+                                    <div class="row">
+                                            <div class="col-sm-6">
+                                            {{ Form::label('First Name') }}
+                                            {{ Form::text('first_name', $user->first_name, array('class' => 'form-control', 'placeholder' => 'Enter First Name')) }} 
+                                            </div>
+                                            <div class="col-sm-6">
+                                            {{ Form::label('Last Name') }}
+                                            {{ Form::text('last_name', $user->last_name, array('class' => 'form-control', 'placeholder' => 'Enter Last Name')) }}                                     
+                                            </div>
+                                        </div> 
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                            {{ Form::label('User Name') }}
+                                            {{ Form::text('name', $user->name, array('class' => 'form-control', 'placeholder' => 'Enter User Name')) }}
+                                            </div>
+                                            <div class="col-sm-6">
+                                            {{ Form::label('Password') }}
+                                            {{ Form::password('password', array('class' => 'form-control', 'placeholder' => 'Enter Password')) }}                                       </div>
+                                        </div> 
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                            {{ Form::label('Email Address') }}
+                                            {{ Form::text('email', $user->email, array('class' => 'form-control', 'placeholder' => 'Enter Email Address')) }}                                     
+                                            </div>
+                                            <div class="col-sm-6">
+                                            {{ Form::label('Mobile Number') }}
+                                            {{ Form::text('mobile', $user->mobile, array('class' => 'form-control', 'placeholder' => 'Enter Mobile Number')) }}
+                                            </div>
+                                        </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group"><label>Access</label> 
+                                            <select name="access" id="access" class="form-control selectpicker access" multiple title="Please select">
+                                            <option value="User Management"@if(in_array('User Management',$access)) selected @endif>User Management</option>
+                                            <option value="Video Library"@if(in_array('Video Library',$access)) selected @endif>Video Library</option>
+                                            <option value="Advertising"@if(in_array('Advertising',$access)) selected @endif>Advertising</option>
+                                            <option value="Switcher"@if(in_array('Switcher',$access)) selected @endif>Switcher</option>
+                                          <optgroup label="User Submitted">
+                                            <option value="Video"@if(in_array('Video',$access)) selected @endif>Video</option>
+                                            <option value="Photos"@if(in_array('Photos',$access)) selected @endif>Photos</option>
+                                          </optgroup>
+                                        </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group"><label>Notifications</label> 
+                                            <select name="notifications" id="notifications" class="form-control selectpicker notifications" multiple title="Please select">
+                                                <option value="email" @if(in_array('email',$notification)) selected @endif>Email</option>
+                                                <option value="sms" @if(in_array('sms',$notification)) selected @endif>SMS</option>
+                                            </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="pull-right">
+                                        <div class="btn-group">
+                                        <button class="btn btn-xs btn-primary btn-outline" type="button" id="extra-user">Add Another User</button>
+                                        <button class="btn btn-xs btn-primary usr-btn" type="button" value="{{$user->id}}">Save</button>
+                                        <input type="hidden" name="company_id" value="{{ $companies->id }}">                                        
+                                    </div>
+                                    </div>          
+                                    {!! Form::close() !!}
+                                <!-- </form> -->
+                              </div>
+                             @endforeach
+                            </div>
                           </div>
                           <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingThree">
@@ -838,7 +722,7 @@
                                         $(document).on('ready', function() {
                                             $("#input-4{{$product->id}}").fileinput({
                                                 showCaption: false, 
-                                                uploadUrl: baseUrl+"videoLogo",
+                                                uploadUrl: baseUrl+"/videoLogo",
                                                 autoReplace: true,
                                                 overwriteInitial: true,
                                                 showUploadedThumbs: false,

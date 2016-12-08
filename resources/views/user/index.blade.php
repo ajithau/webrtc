@@ -12,9 +12,12 @@
 @section('title', 'Main page')
 
 @section('content')
+<?php
+    $userid = Auth::User()->id;
+?>
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-12">
-        <h2>User Management</h2>                    
+        <h2></h2>                    
     </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -103,12 +106,12 @@
                             @elseif($user->role == 4) {{"Content Editor"}}
                             @endif
                         </td>
-						<td class="inline_edit" id="first_name">{{ $user->first_name }}</td>
-						<td class="inline_edit" id="last_name">{{ $user->last_name }}</td>
-						<td class="inline_edit" id="name">{{ $user->name }}</td>
-						<td class="inline_edit" id="password">******</td>
-						<td class="inline_edit" id="email">{{ $user->email }}</td>
-						<td class="inline_edit" id="mobile">{{ $user->mobile }}</td>
+						<td @if($userid == $user->id) class="inline_edit" id="first_name" @endif>{{ $user->first_name }}</td>
+						<td @if($userid == $user->id) class="inline_edit" id="last_name" @endif>{{ $user->last_name }}</td>
+						<td @if($userid == $user->id) class="inline_edit" id="name" @endif>{{ $user->name }}</td>
+						<td @if($userid == $user->id) class="inline_edit" id="password" @endif>******</td>
+						<td @if($userid == $user->id) class="inline_edit" id="email" @endif>{{ $user->email }}</td>
+						<td @if($userid == $user->id) class="inline_edit" id="mobile" @endif>{{ $user->mobile }}</td>
 						<td> </td>
 						<td><?php $notify = unserialize($user->notification);
                         if(is_array($notify)) {

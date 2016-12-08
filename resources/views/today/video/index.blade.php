@@ -18,7 +18,7 @@
                 <h2>Video Library</h2>
             </div>               
         </div>
-        <div id="delete-lib" class="filters" ><i class="fa fa-trash-o" aria-hidden="true"></i></div>
+        <div id="delete-lib" class="filter" ><i class="fa fa-trash-o" aria-hidden="true"></i></div>
         <div class="wrapper wrapper-content animated fadeInRight">
 
             <div class="row">
@@ -42,7 +42,7 @@
                     <span class="pull-left"><strong>Add: Video</strong> <!-- [First Name] [Last Name] --></span>
                 </div>
                 <div class="modal-body">
-                {!! Form::open(array('url' => 'videos/create', 'id' => 'upload-form', 'files'=>true, 'method' => 'post')) !!}                    
+                {!! Form::open(array('url' => 'videos/create','files'=>true,'method' => 'post')) !!}                    
                     <div class="row">
 
                         <div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
@@ -55,8 +55,8 @@
                         </div>
 
                         <br />
-                        <input id="file_name" type="hidden" name="file_name" required>
                         <pre style="display: none;" id="console">
+                            <input id="uploaded" type="hidden" name="file_name" required>
                         </pre>
                         <!-- <div class="col-sm-6">
                         {{ Form::label('Upload Video') }}
@@ -70,27 +70,27 @@
                         </div>
                         <div class="col-sm-6">
                         {{ Form::label('Meta Title') }}
-                        {{ Form::text('meta_title', null, array('class' => 'form-control', 'placeholder' => 'Enter Meta Title', 'required')) }}                                     
+                        {{ Form::text('meta_title', null, array('class' => 'form-control', 'placeholder' => 'Enter Meta Title')) }}                                     
                         </div>
                     </div> 
                     <div class="row">
                         <div class="col-sm-6">
                         {{ Form::label('Description') }}
-                        {{ Form::textarea('description', null, array('class' => 'form-control', 'placeholder' => 'Enter Description', 'size' => '30x5', 'required')) }}
+                        {{ Form::textarea('description', null, array('class' => 'form-control', 'placeholder' => 'Enter Description', 'size' => '30x5')) }}
                         </div>
                         <div class="col-sm-6">
                         {{ Form::label('Full Description') }}
-                        {{ Form::textarea('full_description', null, array('class' => 'form-control', 'placeholder' => 'Enter Full Description', 'size' => '30x5', 'required')) }}                                       
+                        {{ Form::textarea('full_description', null, array('class' => 'form-control', 'placeholder' => 'Enter Full Description', 'size' => '30x5')) }}                                       
                         </div>
                     </div> 
                     <div class="row">
                         <div class="col-sm-6">
                         {{ Form::label('CopyRight') }}
-                        {{ Form::text('copyright', null, array('class' => 'form-control', 'placeholder' => 'Enter Copy Right', 'required')) }}                                     
+                        {{ Form::text('copyright', null, array('class' => 'form-control', 'placeholder' => 'Enter Copy Right')) }}                                     
                         </div>
                         <div class="col-sm-6">
                         {{ Form::label('Author ') }}
-                        {{ Form::text('author', null, array('class' => 'form-control', 'placeholder' => 'Enter Author Name', 'required')) }}
+                        {{ Form::text('author', null, array('class' => 'form-control', 'placeholder' => 'Enter Author Name')) }}
                     </div>
                 </div> 
             </div>
@@ -113,7 +113,7 @@
                     <thead>
                     <tr>
                       <th><input id="example-select-all" type="checkbox" /></th>
-                        <th style="width:30%">Title</th>
+                        <th>Title</th>
                         <th>Duration</th>
                         <th>Upload Date</th>
                         <th>Uploaded by</th>
@@ -122,19 +122,19 @@
                     <tbody>
                     @foreach ($video as $key => $detail)
                     <tr class="gradeX">
-                      <td>{{ $detail->id }}</td>
+                      <td>{{ $detail['id'] }}</td>
                         <td>
                             <?php 
-                            $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $detail->video);
+                            $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $detail['video']);
                             $img = explode('public', $withoutExt); ?>
-                            <a href="{{ url('/') }}/video/detail/{{ $detail->id }}">
-                                <img src="{{ url('/') }}/public{{$img[1]}}_130.jpg" alt="$video_detail->video">&nbsp;
-                            {{ $detail->title }}
+                            <a href="{{ url('/') }}/video/detail/{{ $detail['id'] }}">
+                                <img src="{{ url('/') }}/public{{$img[1]}}_130.jpg" alt="$video_detail['video']">&nbsp;
+                            {{ $detail['detail'][0]['title'] }}
                             </a>
                         </td>
-                        <td>{{ $detail->duration }}</td>
-                        <td>{{ date('d/m/Y', strtotime($detail->updated_at)) }}</td>
-                        <td>{{ $detail->name }}</td>
+                        <td>{{ $detail['detail'][0]['duration'] }}</td>
+                        <td>{{ date('d.m.Y', strtotime($detail['updated_at'])) }}</td>
+                        <td>{{ $detail['user']['name'] }}</td>
                     </tr>
                     @endforeach
                     </tbody>
@@ -155,5 +155,4 @@
                         </div>
                     </div>            
             </div>
-        </div>
 @endsection
